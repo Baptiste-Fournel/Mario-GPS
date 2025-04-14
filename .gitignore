@@ -1,0 +1,45 @@
+### Java ###
+*.class
+*.log
+
+### IntelliJ IDEA ###
+.idea/
+*.iml
+out/
+
+### Eclipse ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+bin/
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+### VS Code ###
+.vscode/
+
+### Gradle ###
+.gradle/
+build/
+
+### Maven ###
+target/
+
+### Mac OS ###
+.DS_Store
+
+### Temp / Backup ###
+*.tmp
+*.bak
+
+### Test output ###
+test-output/
