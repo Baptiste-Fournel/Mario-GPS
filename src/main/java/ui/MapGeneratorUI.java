@@ -236,6 +236,45 @@ public class MapGeneratorUI extends Application {
         canvas.setCursor(Cursor.DEFAULT);
     }
 
+    private void calculatePath() {
+        if (startNode == null || endNode == null) return;
+
+        List<Coord> path = pathUseCase.execute(map,
+                new Coord(startNode.getX(), startNode.getY()),
+                new Coord(endNode.getX(), endNode.getY()));
+
+        if (path == null || path.isEmpty()) {
+            showErrorDialog();
+            return;
+        }
+
+        renderMap();
+
+        Coord prev = new Coord(startNode.getX(), startNode.getY());
+        for (int i = 0; i < path.size(); i++) {
+            Coord curr = path.get(i);
+            Coord next = (i + 1 < path.size()) ? path.get(i + 1) : null;
+
+            MapElementType typeToSet = determineTileType(prev, curr, next);
+            map.getCell(curr.x(), curr.y()).setType(typeToSet);
+            prev = curr;
+        }
+
+        renderMap();
+        exportGeoJson();
+    }
+
+    private MapElementType determineTileType(Coord prev, Coord curr, Coord next) {
+        if (next == null) return MapElementType.NOEUD;
+
+        boolean horizontal = (curr.y() == prev.y() && curr.y() == next.y());
+        boolean vertical = (curr.x() == prev.x() && curr.x() == next.x());
+
+        return (horizontal) ? MapElementType.ARRETE_HORIZONTAL :
+                (vertical) ? MapElementType.ARRETE_VERTICAL :
+                        MapElementType.NOEUD;
+    }
+
     private void renderMap() {
         for (int y = 0; y < HEIGHT; y++) {
             for (int x = 0; x < WIDTH; x++) {
