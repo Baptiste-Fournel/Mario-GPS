@@ -2,6 +2,8 @@ package ui;
 
 import application.PlaceEndPointUseCase;
 import application.PlaceStartPointUseCase;
+import application.ShortestPathUseCase;
+import application.ShortestPathUseCase.Coord;
 import domain.GameMap;
 import domain.MapCell;
 import domain.MapElementType;
@@ -13,7 +15,9 @@ import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.DialogPane;
 import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -48,6 +52,7 @@ public class MapGeneratorUI extends Application {
 
     private final PlaceStartPointUseCase startUseCase = new PlaceStartPointUseCase();
     private final PlaceEndPointUseCase endUseCase = new PlaceEndPointUseCase();
+    private final ShortestPathUseCase pathUseCase = new ShortestPathUseCase();
 
     @Override
     public void start(Stage primaryStage) {
@@ -76,8 +81,7 @@ public class MapGeneratorUI extends Application {
             try {
                 String path = "/tiles/" + type.name().toLowerCase() + ".png";
                 tileImages.put(type, new Image(Objects.requireNonNull(getClass().getResource(path)).toExternalForm()));
-            } catch (Exception ignored) {
-            }
+            } catch (Exception ignored) {}
         }
     }
 
@@ -102,11 +106,13 @@ public class MapGeneratorUI extends Application {
     private VBox createControlPanel() {
         startButton = createStyledButton("Point de départ");
         endButton = createStyledButton("Point d’arrivée");
+        Button calculateButton = createStyledButton("Calculer le chemin");
 
         startButton.setOnAction(e -> activateStartSelection());
         endButton.setOnAction(e -> activateEndSelection());
+        calculateButton.setOnAction(e -> calculatePath());
 
-        VBox box = new VBox(20, startButton, endButton);
+        VBox box = new VBox(20, startButton, endButton, calculateButton);
         box.setAlignment(Pos.TOP_CENTER);
         box.setPadding(new Insets(20));
         return box;
@@ -174,6 +180,45 @@ public class MapGeneratorUI extends Application {
         canvas.setCursor(Cursor.DEFAULT);
     }
 
+    private void calculatePath() {
+        if (startNode == null || endNode == null) return;
+
+        List<Coord> path = pathUseCase.execute(map,
+                new Coord(startNode.getX(), startNode.getY()),
+                new Coord(endNode.getX(), endNode.getY()));
+
+        if (path == null || path.isEmpty()) {
+            showErrorDialog();
+            return;
+        }
+
+        renderMap();
+
+        Coord prev = new Coord(startNode.getX(), startNode.getY());
+        for (int i = 0; i < path.size(); i++) {
+            Coord curr = path.get(i);
+            Coord next = (i + 1 < path.size()) ? path.get(i + 1) : null;
+
+            MapElementType typeToSet = determineTileType(prev, curr, next);
+            map.getCell(curr.x(), curr.y()).setType(typeToSet);
+            prev = curr;
+        }
+
+        renderMap();
+        exportGeoJson();
+    }
+
+    private MapElementType determineTileType(Coord prev, Coord curr, Coord next) {
+        if (next == null) return MapElementType.NOEUD;
+
+        boolean horizontal = (curr.y() == prev.y() && curr.y() == next.y());
+        boolean vertical = (curr.x() == prev.x() && curr.x() == next.x());
+
+        return (horizontal) ? MapElementType.ARRETE_HORIZONTAL :
+                (vertical) ? MapElementType.ARRETE_VERTICAL :
+                        MapElementType.NOEUD;
+    }
+
     private void renderMap() {
         for (int y = 0; y < HEIGHT; y++) {
             for (int x = 0; x < WIDTH; x++) {
@@ -190,32 +235,48 @@ public class MapGeneratorUI extends Application {
         JSONObject geoJson = GeoJsonExporter.export(map);
         try {
             Files.write(Paths.get("generated-map.geojson"), geoJson.toString(2).getBytes());
-        } catch (Exception ignored) {
-        }
+        } catch (Exception ignored) {}
+    }
+
+    private void showErrorDialog() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Chemin introuvable");
+        alert.setHeaderText(null);
+        alert.setContentText("Aucun chemin n'est possible entre le point de départ et d’arrivée.");
+
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.setStyle("""
+            -fx-font-size: 14px;
+            -fx-font-family: 'Segoe UI';
+            -fx-background-color: #ffe0e0;
+        """);
+        dialogPane.lookup(".content.label").setStyle("-fx-text-fill: #b00020;");
+
+        alert.showAndWait();
     }
 
     private String defaultButtonStyle() {
         return """
-                    -fx-font-size: 16px;
-                    -fx-font-family: 'Arial';
-                    -fx-background-color: #f2d7a0;
-                    -fx-border-color: #000000;
-                    -fx-border-width: 2px;
-                    -fx-background-radius: 8px;
-                    -fx-padding: 12px;
-                """;
+            -fx-font-size: 16px;
+            -fx-font-family: 'Arial';
+            -fx-background-color: #f2d7a0;
+            -fx-border-color: #000000;
+            -fx-border-width: 2px;
+            -fx-background-radius: 8px;
+            -fx-padding: 12px;
+        """;
     }
 
     private String activeButtonStyle() {
         return """
-                    -fx-font-size: 16px;
-                    -fx-font-family: 'Arial';
-                    -fx-background-color: #ffd700;
-                    -fx-border-color: #ff0000;
-                    -fx-border-width: 2px;
-                    -fx-background-radius: 8px;
-                    -fx-padding: 12px;
-                """;
+            -fx-font-size: 16px;
+            -fx-font-family: 'Arial';
+            -fx-background-color: #ffd700;
+            -fx-border-color: #ff0000;
+            -fx-border-width: 2px;
+            -fx-background-radius: 8px;
+            -fx-padding: 12px;
+        """;
     }
 
     public static void main(String[] args) {
