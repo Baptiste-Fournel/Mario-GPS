@@ -2,51 +2,51 @@ package application;
 
 import domain.GameMap;
 import domain.MapCell;
-import domain.MapElementType;
 
 import java.util.*;
 
 public class ShortestPathUseCase {
 
-    public record Coord(int x, int y) {}
+    public record Coordinate(int x, int y) {
+    }
 
-    private static final List<Coord> DIRECTIONS = List.of(
-            new Coord(0, -1),
-            new Coord(0, 1),
-            new Coord(-1, 0),
-            new Coord(1, 0)
+    private static final List<Coordinate> DIRECTIONS = List.of(
+            new Coordinate(0, -1),
+            new Coordinate(0, 1),
+            new Coordinate(-1, 0),
+            new Coordinate(1, 0)
     );
 
-    public List<Coord> execute(GameMap map, Coord start, Coord end) {
-        int width = map.getWidth();
-        int height = map.getHeight();
+    public List<Coordinate> execute(GameMap map, Coordinate start, Coordinate goal) {
+        int mapWidth = map.getWidth();
+        int mapHeight = map.getHeight();
 
-        Map<Coord, Coord> previous = new HashMap<>();
-        Map<Coord, Integer> distances = new HashMap<>();
-        PriorityQueue<Coord> queue = new PriorityQueue<>(Comparator.comparingInt(distances::get));
+        Map<Coordinate, Coordinate> previousStep = new HashMap<>();
+        Map<Coordinate, Integer> shortestDistances = new HashMap<>();
+        PriorityQueue<Coordinate> toVisit = new PriorityQueue<>(Comparator.comparingInt(shortestDistances::get));
 
-        distances.put(start, 0);
-        queue.add(start);
+        shortestDistances.put(start, 0);
+        toVisit.add(start);
 
-        while (!queue.isEmpty()) {
-            Coord current = queue.poll();
+        while (!toVisit.isEmpty()) {
+            Coordinate current = toVisit.poll();
 
-            if (current.equals(end)) {
-                return reconstructPath(previous, end);
+            if (current.equals(goal)) {
+                return buildPath(previousStep, goal);
             }
 
-            for (Coord dir : DIRECTIONS) {
-                Coord neighbor = new Coord(current.x + dir.x, current.y + dir.y);
-                if (!isInBounds(neighbor, width, height)) continue;
+            for (Coordinate direction : DIRECTIONS) {
+                Coordinate neighbor = new Coordinate(current.x + direction.x, current.y + direction.y);
 
-                MapCell cell = map.getCell(neighbor.x, neighbor.y);
-                if (!isTraversable(cell)) continue;
+                if (!isWithinBounds(neighbor, mapWidth, mapHeight)) continue;
+                if (!isWalkable(map.getCell(neighbor.x, neighbor.y))) continue;
 
-                int newDist = distances.get(current) + 1;
-                if (newDist < distances.getOrDefault(neighbor, Integer.MAX_VALUE)) {
-                    distances.put(neighbor, newDist);
-                    previous.put(neighbor, current);
-                    queue.add(neighbor);
+                int tentativeDistance = shortestDistances.get(current) + 1;
+
+                if (tentativeDistance < shortestDistances.getOrDefault(neighbor, Integer.MAX_VALUE)) {
+                    shortestDistances.put(neighbor, tentativeDistance);
+                    previousStep.put(neighbor, current);
+                    toVisit.add(neighbor);
                 }
             }
         }
@@ -54,24 +54,26 @@ public class ShortestPathUseCase {
         return null;
     }
 
-    private boolean isInBounds(Coord c, int w, int h) {
-        return c.x >= 0 && c.x < w && c.y >= 0 && c.y < h;
+    private boolean isWithinBounds(Coordinate coord, int width, int height) {
+        return coord.x >= 0 && coord.x < width && coord.y >= 0 && coord.y < height;
     }
 
-    private boolean isTraversable(MapCell cell) {
-        return cell.getType() == MapElementType.HERBE ||
-                cell.getType() == MapElementType.NOEUD ||
-                cell.getType() == MapElementType.ARRETE_HORIZONTAL ||
-                cell.getType() == MapElementType.ARRETE_VERTICAL;
+    private boolean isWalkable(MapCell cell) {
+        return switch (cell.getType()) {
+            case HERBE, NOEUD, ARRETE_HORIZONTAL, ARRETE_VERTICAL -> true;
+            default -> false;
+        };
     }
 
-    private List<Coord> reconstructPath(Map<Coord, Coord> previous, Coord target) {
-        List<Coord> path = new ArrayList<>();
-        Coord current = target;
-        while (previous.containsKey(current)) {
+    private List<Coordinate> buildPath(Map<Coordinate, Coordinate> previousStep, Coordinate target) {
+        List<Coordinate> path = new ArrayList<>();
+        Coordinate current = target;
+
+        while (previousStep.containsKey(current)) {
             path.add(current);
-            current = previous.get(current);
+            current = previousStep.get(current);
         }
+
         Collections.reverse(path);
         return path;
     }

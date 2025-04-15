@@ -3,7 +3,7 @@ package ui;
 import application.PlaceEndPointUseCase;
 import application.PlaceStartPointUseCase;
 import application.ShortestPathUseCase;
-import application.ShortestPathUseCase.Coord;
+import application.ShortestPathUseCase.Coordinate;
 import domain.GameMap;
 import domain.MapCell;
 import domain.MapElementType;
@@ -40,7 +40,7 @@ public class MapGeneratorUI extends Application {
 
     private MapCell startNode = null;
     private MapCell endNode = null;
-    private List<Coord> currentPath = new ArrayList<>();
+    private List<Coordinate> currentPath = new ArrayList<>();
 
     private boolean selectingStart = false;
     private boolean selectingEnd = false;
@@ -108,12 +108,14 @@ public class MapGeneratorUI extends Application {
         startButton = createStyledButton("Point de départ");
         endButton = createStyledButton("Point d’arrivée");
         Button calculateButton = createStyledButton("Calculer le chemin");
+        Button resetButton = createStyledButton("Réinitialiser");
 
         startButton.setOnAction(e -> activateStartSelection());
         endButton.setOnAction(e -> activateEndSelection());
         calculateButton.setOnAction(e -> calculatePath());
+        resetButton.setOnAction(e -> resetMap());
 
-        VBox box = new VBox(20, startButton, endButton, calculateButton);
+        VBox box = new VBox(20, startButton, endButton, calculateButton, resetButton);
         box.setAlignment(Pos.TOP_CENTER);
         box.setPadding(new Insets(20));
         return box;
@@ -163,9 +165,9 @@ public class MapGeneratorUI extends Application {
 
         clearCurrentPath();
 
-        List<Coord> path = pathUseCase.execute(map,
-                new Coord(startNode.getX(), startNode.getY()),
-                new Coord(endNode.getX(), endNode.getY()));
+        List<Coordinate> path = pathUseCase.execute(map,
+                new Coordinate(startNode.getX(), startNode.getY()),
+                new Coordinate(endNode.getX(), endNode.getY()));
 
         if (path == null || path.isEmpty()) {
             showErrorDialog();
@@ -174,10 +176,10 @@ public class MapGeneratorUI extends Application {
 
         currentPath = path;
 
-        Coord prev = new Coord(startNode.getX(), startNode.getY());
+        Coordinate prev = new Coordinate(startNode.getX(), startNode.getY());
         for (int i = 0; i < path.size(); i++) {
-            Coord curr = path.get(i);
-            Coord next = (i + 1 < path.size()) ? path.get(i + 1) : null;
+            Coordinate curr = path.get(i);
+            Coordinate next = (i + 1 < path.size()) ? path.get(i + 1) : null;
 
             MapElementType typeToSet = determineTileType(prev, curr, next);
             map.getCell(curr.x(), curr.y()).setType(typeToSet);
@@ -189,7 +191,7 @@ public class MapGeneratorUI extends Application {
     }
 
     private void clearCurrentPath() {
-        for (Coord coord : currentPath) {
+        for (Coordinate coord : currentPath) {
             MapCell cell = map.getCell(coord.x(), coord.y());
             if (cell.getType() == MapElementType.ARRETE_HORIZONTAL ||
                     cell.getType() == MapElementType.ARRETE_VERTICAL ||
@@ -200,7 +202,16 @@ public class MapGeneratorUI extends Application {
         currentPath.clear();
     }
 
-    private MapElementType determineTileType(Coord prev, Coord curr, Coord next) {
+    private void resetMap() {
+        startNode = null;
+        endNode = null;
+        currentPath.clear();
+        generateRandomMap();
+        renderMap();
+        exportGeoJson();
+    }
+
+    private MapElementType determineTileType(Coordinate prev, Coordinate curr, Coordinate next) {
         if (next == null) return MapElementType.NOEUD;
 
         boolean horizontal = (curr.y() == prev.y() && curr.y() == next.y());
@@ -209,31 +220,6 @@ public class MapGeneratorUI extends Application {
         return (horizontal) ? MapElementType.ARRETE_HORIZONTAL :
                 (vertical) ? MapElementType.ARRETE_VERTICAL :
                         MapElementType.NOEUD;
-    }
-
-    private void activateStartSelection() {
-        selectingStart = true;
-        selectingEnd = false;
-        startButton.setStyle(activeButtonStyle());
-        endButton.setStyle(defaultButtonStyle());
-        canvas.setCursor(Cursor.CROSSHAIR);
-    }
-
-    private void activateEndSelection() {
-        if (startNode == null) return;
-        selectingEnd = true;
-        selectingStart = false;
-        endButton.setStyle(activeButtonStyle());
-        startButton.setStyle(defaultButtonStyle());
-        canvas.setCursor(Cursor.CROSSHAIR);
-    }
-
-    private void resetSelection() {
-        selectingStart = false;
-        selectingEnd = false;
-        startButton.setStyle(defaultButtonStyle());
-        endButton.setStyle(defaultButtonStyle());
-        canvas.setCursor(Cursor.DEFAULT);
     }
 
     private void renderMap() {
@@ -294,6 +280,31 @@ public class MapGeneratorUI extends Application {
             -fx-background-radius: 8px;
             -fx-padding: 12px;
         """;
+    }
+
+    private void activateStartSelection() {
+        selectingStart = true;
+        selectingEnd = false;
+        startButton.setStyle(activeButtonStyle());
+        endButton.setStyle(defaultButtonStyle());
+        canvas.setCursor(Cursor.CROSSHAIR);
+    }
+
+    private void activateEndSelection() {
+        if (startNode == null) return;
+        selectingStart = false;
+        selectingEnd = true;
+        endButton.setStyle(activeButtonStyle());
+        startButton.setStyle(defaultButtonStyle());
+        canvas.setCursor(Cursor.CROSSHAIR);
+    }
+
+    private void resetSelection() {
+        selectingStart = false;
+        selectingEnd = false;
+        startButton.setStyle(defaultButtonStyle());
+        endButton.setStyle(defaultButtonStyle());
+        canvas.setCursor(Cursor.DEFAULT);
     }
 
     public static void main(String[] args) {
