@@ -6,23 +6,25 @@
 .idea/
 *.iml
 out/
+*.ipr
+*.iws
 
 ### Eclipse ###
 .apt_generated
 .classpath
 .factorypath
 .project
-.settings
+.settings/
 .springBeans
 .sts4-cache
 bin/
 
 ### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
+nbproject/private/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
 
 ### VS Code ###
 .vscode/
@@ -30,16 +32,27 @@ bin/
 ### Gradle ###
 .gradle/
 build/
+!gradlew
+!gradlew.bat
+!gradle/wrapper/gradle-wrapper.properties
+!gradle/wrapper/gradle-wrapper.jar
 
 ### Maven ###
 target/
 
-### Mac OS ###
+### OS spécifiques ###
 .DS_Store
+Thumbs.db
 
 ### Temp / Backup ###
 *.tmp
 *.bak
+*.swp
+*.swo
+*.~*
 
 ### Test output ###
 test-output/
+
+### JSON temporaire ou exporté ###
+generated-map.geojson
