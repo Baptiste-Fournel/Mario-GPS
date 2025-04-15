@@ -34,7 +34,7 @@ dependencies {
 }
 
 application {
-    mainClass = 'ui.MapGeneratorUI'
+    mainClass = 'ui.Main'
 }
 
 javafx {
