@@ -3,7 +3,7 @@ package ui;
 import application.PlaceEndPointUseCase;
 import application.PlaceStartPointUseCase;
 import application.ShortestPathUseCase;
-import application.ShortestPathUseCase.Coord;
+import application.ShortestPathUseCase.Coordinate;
 import domain.GameMap;
 import domain.MapCell;
 import domain.MapElementType;
@@ -40,7 +40,7 @@ public class MapGeneratorUI extends Application {
 
     private MapCell startNode = null;
     private MapCell endNode = null;
-    private List<Coord> currentPath = new ArrayList<>();
+    private List<Coordinate> currentPath = new ArrayList<>();
 
     private boolean selectingStart = false;
     private boolean selectingEnd = false;
@@ -165,9 +165,9 @@ public class MapGeneratorUI extends Application {
 
         clearCurrentPath();
 
-        List<Coord> path = pathUseCase.execute(map,
-                new Coord(startNode.getX(), startNode.getY()),
-                new Coord(endNode.getX(), endNode.getY()));
+        List<Coordinate> path = pathUseCase.execute(map,
+                new Coordinate(startNode.getX(), startNode.getY()),
+                new Coordinate(endNode.getX(), endNode.getY()));
 
         if (path == null || path.isEmpty()) {
             showErrorDialog();
@@ -176,10 +176,10 @@ public class MapGeneratorUI extends Application {
 
         currentPath = path;
 
-        Coord prev = new Coord(startNode.getX(), startNode.getY());
+        Coordinate prev = new Coordinate(startNode.getX(), startNode.getY());
         for (int i = 0; i < path.size(); i++) {
-            Coord curr = path.get(i);
-            Coord next = (i + 1 < path.size()) ? path.get(i + 1) : null;
+            Coordinate curr = path.get(i);
+            Coordinate next = (i + 1 < path.size()) ? path.get(i + 1) : null;
 
             MapElementType typeToSet = determineTileType(prev, curr, next);
             map.getCell(curr.x(), curr.y()).setType(typeToSet);
@@ -191,7 +191,7 @@ public class MapGeneratorUI extends Application {
     }
 
     private void clearCurrentPath() {
-        for (Coord coord : currentPath) {
+        for (Coordinate coord : currentPath) {
             MapCell cell = map.getCell(coord.x(), coord.y());
             if (cell.getType() == MapElementType.ARRETE_HORIZONTAL ||
                     cell.getType() == MapElementType.ARRETE_VERTICAL ||
@@ -211,7 +211,7 @@ public class MapGeneratorUI extends Application {
         exportGeoJson();
     }
 
-    private MapElementType determineTileType(Coord prev, Coord curr, Coord next) {
+    private MapElementType determineTileType(Coordinate prev, Coordinate curr, Coordinate next) {
         if (next == null) return MapElementType.NOEUD;
 
         boolean horizontal = (curr.y() == prev.y() && curr.y() == next.y());
@@ -306,7 +306,6 @@ public class MapGeneratorUI extends Application {
         endButton.setStyle(defaultButtonStyle());
         canvas.setCursor(Cursor.DEFAULT);
     }
-
 
     public static void main(String[] args) {
         launch(args);
