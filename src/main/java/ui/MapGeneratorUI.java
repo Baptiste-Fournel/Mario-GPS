@@ -108,12 +108,14 @@ public class MapGeneratorUI extends Application {
         startButton = createStyledButton("Point de départ");
         endButton = createStyledButton("Point d’arrivée");
         Button calculateButton = createStyledButton("Calculer le chemin");
+        Button resetButton = createStyledButton("Réinitialiser");
 
         startButton.setOnAction(e -> activateStartSelection());
         endButton.setOnAction(e -> activateEndSelection());
         calculateButton.setOnAction(e -> calculatePath());
+        resetButton.setOnAction(e -> resetMap());
 
-        VBox box = new VBox(20, startButton, endButton, calculateButton);
+        VBox box = new VBox(20, startButton, endButton, calculateButton, resetButton);
         box.setAlignment(Pos.TOP_CENTER);
         box.setPadding(new Insets(20));
         return box;
@@ -200,6 +202,15 @@ public class MapGeneratorUI extends Application {
         currentPath.clear();
     }
 
+    private void resetMap() {
+        startNode = null;
+        endNode = null;
+        currentPath.clear();
+        generateRandomMap();
+        renderMap();
+        exportGeoJson();
+    }
+
     private MapElementType determineTileType(Coord prev, Coord curr, Coord next) {
         if (next == null) return MapElementType.NOEUD;
 
@@ -209,31 +220,6 @@ public class MapGeneratorUI extends Application {
         return (horizontal) ? MapElementType.ARRETE_HORIZONTAL :
                 (vertical) ? MapElementType.ARRETE_VERTICAL :
                         MapElementType.NOEUD;
-    }
-
-    private void activateStartSelection() {
-        selectingStart = true;
-        selectingEnd = false;
-        startButton.setStyle(activeButtonStyle());
-        endButton.setStyle(defaultButtonStyle());
-        canvas.setCursor(Cursor.CROSSHAIR);
-    }
-
-    private void activateEndSelection() {
-        if (startNode == null) return;
-        selectingEnd = true;
-        selectingStart = false;
-        endButton.setStyle(activeButtonStyle());
-        startButton.setStyle(defaultButtonStyle());
-        canvas.setCursor(Cursor.CROSSHAIR);
-    }
-
-    private void resetSelection() {
-        selectingStart = false;
-        selectingEnd = false;
-        startButton.setStyle(defaultButtonStyle());
-        endButton.setStyle(defaultButtonStyle());
-        canvas.setCursor(Cursor.DEFAULT);
     }
 
     private void renderMap() {
@@ -295,6 +281,32 @@ public class MapGeneratorUI extends Application {
             -fx-padding: 12px;
         """;
     }
+
+    private void activateStartSelection() {
+        selectingStart = true;
+        selectingEnd = false;
+        startButton.setStyle(activeButtonStyle());
+        endButton.setStyle(defaultButtonStyle());
+        canvas.setCursor(Cursor.CROSSHAIR);
+    }
+
+    private void activateEndSelection() {
+        if (startNode == null) return;
+        selectingStart = false;
+        selectingEnd = true;
+        endButton.setStyle(activeButtonStyle());
+        startButton.setStyle(defaultButtonStyle());
+        canvas.setCursor(Cursor.CROSSHAIR);
+    }
+
+    private void resetSelection() {
+        selectingStart = false;
+        selectingEnd = false;
+        startButton.setStyle(defaultButtonStyle());
+        endButton.setStyle(defaultButtonStyle());
+        canvas.setCursor(Cursor.DEFAULT);
+    }
+
 
     public static void main(String[] args) {
         launch(args);
