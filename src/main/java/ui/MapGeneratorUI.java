@@ -1,5 +1,6 @@
 package ui;
 
+import application.PlaceEndPointUseCase;
 import application.PlaceStartPointUseCase;
 import domain.GameMap;
 import domain.MapCell;
@@ -31,19 +32,170 @@ public class MapGeneratorUI extends Application {
     private static final int HEIGHT = 10;
 
     private final Map<MapElementType, Image> tileImages = new HashMap<>();
-    private final GameMap logicalMap = new GameMap(WIDTH, HEIGHT);
-    private MapCell previousStartNode = null;
-    private boolean selectingStartPoint = false;
+    private final GameMap map = new GameMap(WIDTH, HEIGHT);
+
+    private MapCell startNode = null;
+    private MapCell endNode = null;
+
+    private boolean selectingStart = false;
+    private boolean selectingEnd = false;
+
+    private Canvas canvas;
+    private GraphicsContext graphics;
+
+    private Button startButton;
+    private Button endButton;
+
+    private final PlaceStartPointUseCase startUseCase = new PlaceStartPointUseCase();
+    private final PlaceEndPointUseCase endUseCase = new PlaceEndPointUseCase();
 
     @Override
     public void start(Stage primaryStage) {
+        initializeCanvas();
         loadTiles();
+        generateRandomMap();
 
-        Canvas canvas = new Canvas(WIDTH * TILE_SIZE, HEIGHT * TILE_SIZE);
-        GraphicsContext gc = canvas.getGraphicsContext2D();
-        drawRandomMap(gc);
+        VBox controlPanel = createControlPanel();
+        HBox rootLayout = buildMainLayout(controlPanel);
 
-        String defaultStyle = """
+        primaryStage.setTitle("Carte générée aléatoirement");
+        primaryStage.setScene(new Scene(rootLayout));
+        primaryStage.show();
+
+        exportGeoJson();
+    }
+
+    private void initializeCanvas() {
+        canvas = new Canvas(WIDTH * TILE_SIZE, HEIGHT * TILE_SIZE);
+        graphics = canvas.getGraphicsContext2D();
+        canvas.setOnMouseClicked(event -> handleCanvasClick((int) (event.getX() / TILE_SIZE), (int) (event.getY() / TILE_SIZE)));
+    }
+
+    private void loadTiles() {
+        for (MapElementType type : MapElementType.values()) {
+            try {
+                String path = "/tiles/" + type.name().toLowerCase() + ".png";
+                tileImages.put(type, new Image(Objects.requireNonNull(getClass().getResource(path)).toExternalForm()));
+            } catch (Exception ignored) {
+            }
+        }
+    }
+
+    private void generateRandomMap() {
+        List<MapElementType> weights = List.of(
+                MapElementType.HERBE, MapElementType.HERBE, MapElementType.HERBE, MapElementType.HERBE,
+                MapElementType.ARBRE, MapElementType.ARBRE,
+                MapElementType.EAU
+        );
+
+        Random random = new Random();
+        for (int y = 0; y < HEIGHT; y++) {
+            for (int x = 0; x < WIDTH; x++) {
+                MapElementType type = weights.get(random.nextInt(weights.size()));
+                map.setCell(x, y, new MapCell(x, y, type));
+            }
+        }
+
+        renderMap();
+    }
+
+    private VBox createControlPanel() {
+        startButton = createStyledButton("Point de départ");
+        endButton = createStyledButton("Point d’arrivée");
+
+        startButton.setOnAction(e -> activateStartSelection());
+        endButton.setOnAction(e -> activateEndSelection());
+
+        VBox box = new VBox(20, startButton, endButton);
+        box.setAlignment(Pos.TOP_CENTER);
+        box.setPadding(new Insets(20));
+        return box;
+    }
+
+    private Button createStyledButton(String text) {
+        Button btn = new Button(text);
+        btn.setStyle(defaultButtonStyle());
+        return btn;
+    }
+
+    private HBox buildMainLayout(VBox controls) {
+        StackPane canvasContainer = new StackPane(canvas);
+        canvasContainer.setPadding(new Insets(20));
+
+        HBox layout = new HBox(30, canvasContainer, controls);
+        layout.setPadding(new Insets(10));
+        layout.setAlignment(Pos.CENTER);
+        return layout;
+    }
+
+    private void handleCanvasClick(int x, int y) {
+        if (x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT) return;
+
+        MapCell cell = map.getCell(x, y);
+        if (cell.getType() != MapElementType.HERBE) return;
+
+        if (selectingStart) {
+            startUseCase.execute(map, x, y, startNode);
+            startNode = map.getCell(x, y);
+            resetSelection();
+            renderMap();
+            exportGeoJson();
+        } else if (selectingEnd && startNode != null) {
+            endUseCase.execute(map, x, y, endNode);
+            endNode = map.getCell(x, y);
+            resetSelection();
+            renderMap();
+            exportGeoJson();
+        }
+    }
+
+    private void activateStartSelection() {
+        selectingStart = true;
+        selectingEnd = false;
+        startButton.setStyle(activeButtonStyle());
+        endButton.setStyle(defaultButtonStyle());
+        canvas.setCursor(Cursor.CROSSHAIR);
+    }
+
+    private void activateEndSelection() {
+        if (startNode == null) return;
+        selectingEnd = true;
+        selectingStart = false;
+        endButton.setStyle(activeButtonStyle());
+        startButton.setStyle(defaultButtonStyle());
+        canvas.setCursor(Cursor.CROSSHAIR);
+    }
+
+    private void resetSelection() {
+        selectingStart = false;
+        selectingEnd = false;
+        startButton.setStyle(defaultButtonStyle());
+        endButton.setStyle(defaultButtonStyle());
+        canvas.setCursor(Cursor.DEFAULT);
+    }
+
+    private void renderMap() {
+        for (int y = 0; y < HEIGHT; y++) {
+            for (int x = 0; x < WIDTH; x++) {
+                MapElementType type = map.getCell(x, y).getType();
+                Image img = tileImages.get(type);
+                if (img != null) {
+                    graphics.drawImage(img, x * TILE_SIZE, y * TILE_SIZE);
+                }
+            }
+        }
+    }
+
+    private void exportGeoJson() {
+        JSONObject geoJson = GeoJsonExporter.export(map);
+        try {
+            Files.write(Paths.get("generated-map.geojson"), geoJson.toString(2).getBytes());
+        } catch (Exception ignored) {
+        }
+    }
+
+    private String defaultButtonStyle() {
+        return """
                     -fx-font-size: 16px;
                     -fx-font-family: 'Arial';
                     -fx-background-color: #f2d7a0;
@@ -52,8 +204,10 @@ public class MapGeneratorUI extends Application {
                     -fx-background-radius: 8px;
                     -fx-padding: 12px;
                 """;
+    }
 
-        String activeStyle = """
+    private String activeButtonStyle() {
+        return """
                     -fx-font-size: 16px;
                     -fx-font-family: 'Arial';
                     -fx-background-color: #ffd700;
@@ -62,105 +216,6 @@ public class MapGeneratorUI extends Application {
                     -fx-background-radius: 8px;
                     -fx-padding: 12px;
                 """;
-
-        Button startButton = new Button("Point de départ");
-        startButton.setStyle(defaultStyle);
-
-        PlaceStartPointUseCase useCase = new PlaceStartPointUseCase();
-
-        startButton.setOnAction(e -> {
-            selectingStartPoint = true;
-            startButton.setStyle(activeStyle);
-            canvas.setCursor(Cursor.CROSSHAIR);
-        });
-
-        canvas.setOnMouseClicked(event -> {
-            if (!selectingStartPoint) return;
-
-            int x = (int) (event.getX() / TILE_SIZE);
-            int y = (int) (event.getY() / TILE_SIZE);
-            if (x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT) return;
-
-            MapCell cell = logicalMap.getCell(x, y);
-            if (cell.getType() == MapElementType.HERBE) {
-                useCase.execute(logicalMap, x, y, previousStartNode);
-
-                drawMap(gc);
-                previousStartNode = logicalMap.getCell(x, y);
-                selectingStartPoint = false;
-                startButton.setStyle(defaultStyle);
-                canvas.setCursor(Cursor.DEFAULT);
-
-                exportToGeoJson();
-            }
-        });
-
-        VBox controls = new VBox(20, startButton);
-        controls.setAlignment(Pos.TOP_CENTER);
-        controls.setPadding(new Insets(20));
-
-        StackPane canvasContainer = new StackPane(canvas);
-        canvasContainer.setPadding(new Insets(20));
-
-        HBox root = new HBox(30, canvasContainer, controls);
-        root.setPadding(new Insets(10));
-        root.setAlignment(Pos.CENTER);
-
-        Scene scene = new Scene(root);
-        primaryStage.setTitle("Carte générée aléatoirement");
-        primaryStage.setScene(scene);
-        primaryStage.show();
-
-        exportToGeoJson();
-    }
-
-    private void loadTiles() {
-        for (MapElementType type : MapElementType.values()) {
-            String fileName = "/tiles/" + type.name().toLowerCase() + ".png";
-            try {
-                Image image = new Image(Objects.requireNonNull(getClass().getResource(fileName)).toExternalForm());
-                tileImages.put(type, image);
-            } catch (Exception ignored) {
-            }
-        }
-    }
-
-    private void drawRandomMap(GraphicsContext gc) {
-        Random random = new Random();
-        List<MapElementType> types = new ArrayList<>();
-        Collections.addAll(types,
-                MapElementType.HERBE, MapElementType.HERBE, MapElementType.HERBE, MapElementType.HERBE,
-                MapElementType.ARBRE, MapElementType.ARBRE,
-                MapElementType.EAU);
-
-        for (int y = 0; y < HEIGHT; y++) {
-            for (int x = 0; x < WIDTH; x++) {
-                MapElementType type = types.get(random.nextInt(types.size()));
-                logicalMap.setCell(x, y, new MapCell(x, y, type));
-            }
-        }
-
-        drawMap(gc);
-    }
-
-    private void drawMap(GraphicsContext gc) {
-        for (int y = 0; y < HEIGHT; y++) {
-            for (int x = 0; x < WIDTH; x++) {
-                MapElementType type = logicalMap.getCell(x, y).getType();
-                Image img = tileImages.get(type);
-                if (img != null) {
-                    gc.drawImage(img, x * TILE_SIZE, y * TILE_SIZE);
-                }
-            }
-        }
-    }
-
-    private void exportToGeoJson() {
-        JSONObject geoJson = GeoJsonExporter.export(logicalMap);
-        try {
-            Files.write(Paths.get("generated-map.geojson"), geoJson.toString(2).getBytes());
-        } catch (Exception ignored) {
-        }
     }
 
     public static void main(String[] args) {

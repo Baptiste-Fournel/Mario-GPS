@@ -20,7 +20,7 @@
         "type": "Point"
       },
       "type": "Feature",
-      "properties": {"type": "HERBE"}
+      "properties": {"type": "ARBRE"}
     },
     {
       "geometry": {
@@ -42,7 +42,7 @@
         "type": "Point"
       },
       "type": "Feature",
-      "properties": {"type": "HERBE"}
+      "properties": {"type": "EAU"}
     },
     {
       "geometry": {
@@ -53,7 +53,7 @@
         "type": "Point"
       },
       "type": "Feature",
-      "properties": {"type": "HERBE"}
+      "properties": {"type": "ARBRE"}
     },
     {
       "geometry": {
@@ -64,7 +64,7 @@
         "type": "Point"
       },
       "type": "Feature",
-      "properties": {"type": "ARBRE"}
+      "properties": {"type": "HERBE"}
     },
     {
       "geometry": {
@@ -86,7 +86,7 @@
         "type": "Point"
       },
       "type": "Feature",
-      "properties": {"type": "HERBE"}
+      "properties": {"type": "ARBRE"}
     },
     {
       "geometry": {
@@ -97,7 +97,7 @@
         "type": "Point"
       },
       "type": "Feature",
-      "properties": {"type": "ARBRE"}
+      "properties": {"type": "HERBE"}
     },
     {
       "geometry": {
@@ -119,7 +119,7 @@
         "type": "Point"
       },
       "type": "Feature",
-      "properties": {"type": "EAU"}
+      "properties": {"type": "ARBRE"}
     },
     {
       "geometry": {
@@ -130,7 +130,7 @@
         "type": "Point"
       },
       "type": "Feature",
-      "properties": {"type": "ARBRE"}
+      "properties": {"type": "HERBE"}
     },
     {
       "geometry": {
@@ -163,7 +163,7 @@
         "type": "Point"
       },
       "type": "Feature",
-      "properties": {"type": "HERBE"}
+      "properties": {"type": "EAU"}
     },
     {
       "geometry": {
@@ -174,7 +174,7 @@
         "type": "Point"
       },
       "type": "Feature",
-      "properties": {"type": "HERBE"}
+      "properties": {"type": "ARBRE"}
     },
     {
       "geometry": {
@@ -185,7 +185,7 @@
         "type": "Point"
       },
       "type": "Feature",
-      "properties": {"type": "HERBE"}
+      "properties": {"type": "EAU"}
     },
     {
       "geometry": {
@@ -196,7 +196,7 @@
         "type": "Point"
       },
       "type": "Feature",
-      "properties": {"type": "HERBE"}
+      "properties": {"type": "ARBRE"}
     },
     {
       "geometry": {
@@ -214,6 +214,292 @@
         "coordinates": [
           9,
           1
+        ],
+        "type": "Point"
+      },
+      "type": "Feature",
+      "properties": {"type": "HERBE"}
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          0,
+          2
+        ],
+        "type": "Point"
+      },
+      "type": "Feature",
+      "properties": {"type": "ARBRE"}
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          1,
+          2
+        ],
+        "type": "Point"
+      },
+      "type": "Feature",
+      "properties": {"type": "HERBE"}
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          2,
+          2
+        ],
+        "type": "Point"
+      },
+      "type": "Feature",
+      "properties": {"type": "HERBE"}
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          3,
+          2
+        ],
+        "type": "Point"
+      },
+      "type": "Feature",
+      "properties": {"type": "HERBE"}
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          4,
+          2
+        ],
+        "type": "Point"
+      },
+      "type": "Feature",
+      "properties": {"type": "ARBRE"}
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          5,
+          2
+        ],
+        "type": "Point"
+      },
+      "type": "Feature",
+      "properties": {"type": "HERBE"}
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          6,
+          2
+        ],
+        "type": "Point"
+      },
+      "type": "Feature",
+      "properties": {"type": "HERBE"}
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          7,
+          2
+        ],
+        "type": "Point"
+      },
+      "type": "Feature",
+      "properties": {"type": "HERBE"}
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          8,
+          2
+        ],
+        "type": "Point"
+      },
+      "type": "Feature",
+      "properties": {"type": "ARBRE"}
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          9,
+          2
+        ],
+        "type": "Point"
+      },
+      "type": "Feature",
+      "properties": {"type": "HERBE"}
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          0,
+          3
+        ],
+        "type": "Point"
+      },
+      "type": "Feature",
+      "properties": {"type": "HERBE"}
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          1,
+          3
+        ],
+        "type": "Point"
+      },
+      "type": "Feature",
+      "properties": {"type": "HERBE"}
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          2,
+          3
+        ],
+        "type": "Point"
+      },
+      "type": "Feature",
+      "properties": {"type": "ARBRE"}
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          3,
+          3
+        ],
+        "type": "Point"
+      },
+      "type": "Feature",
+      "properties": {"type": "HERBE"}
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          4,
+          3
+        ],
+        "type": "Point"
+      },
+      "type": "Feature",
+      "properties": {"type": "HERBE"}
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          5,
+          3
+        ],
+        "type": "Point"
+      },
+      "type": "Feature",
+      "properties": {"type": "HERBE"}
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          6,
+          3
+        ],
+        "type": "Point"
+      },
+      "type": "Feature",
+      "properties": {"type": "HERBE"}
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          7,
+          3
+        ],
+        "type": "Point"
+      },
+      "type": "Feature",
+      "properties": {"type": "HERBE"}
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          8,
+          3
+        ],
+        "type": "Point"
+      },
+      "type": "Feature",
+      "properties": {"type": "HERBE"}
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          9,
+          3
+        ],
+        "type": "Point"
+      },
+      "type": "Feature",
+      "properties": {"type": "EAU"}
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          0,
+          4
+        ],
+        "type": "Point"
+      },
+      "type": "Feature",
+      "properties": {"type": "ARBRE"}
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          1,
+          4
+        ],
+        "type": "Point"
+      },
+      "type": "Feature",
+      "properties": {"type": "HERBE"}
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          2,
+          4
+        ],
+        "type": "Point"
+      },
+      "type": "Feature",
+      "properties": {"type": "ARBRE"}
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          3,
+          4
+        ],
+        "type": "Point"
+      },
+      "type": "Feature",
+      "properties": {"type": "HERBE"}
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          4,
+          4
+        ],
+        "type": "Point"
+      },
+      "type": "Feature",
+      "properties": {"type": "EAU"}
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          5,
+          4
         ],
         "type": "Point"
       },
@@ -223,299 +509,13 @@
     {
       "geometry": {
         "coordinates": [
-          0,
-          2
-        ],
-        "type": "Point"
-      },
-      "type": "Feature",
-      "properties": {"type": "HERBE"}
-    },
-    {
-      "geometry": {
-        "coordinates": [
-          1,
-          2
-        ],
-        "type": "Point"
-      },
-      "type": "Feature",
-      "properties": {"type": "HERBE"}
-    },
-    {
-      "geometry": {
-        "coordinates": [
-          2,
-          2
-        ],
-        "type": "Point"
-      },
-      "type": "Feature",
-      "properties": {"type": "HERBE"}
-    },
-    {
-      "geometry": {
-        "coordinates": [
-          3,
-          2
-        ],
-        "type": "Point"
-      },
-      "type": "Feature",
-      "properties": {"type": "HERBE"}
-    },
-    {
-      "geometry": {
-        "coordinates": [
-          4,
-          2
-        ],
-        "type": "Point"
-      },
-      "type": "Feature",
-      "properties": {"type": "ARBRE"}
-    },
-    {
-      "geometry": {
-        "coordinates": [
-          5,
-          2
-        ],
-        "type": "Point"
-      },
-      "type": "Feature",
-      "properties": {"type": "HERBE"}
-    },
-    {
-      "geometry": {
-        "coordinates": [
-          6,
-          2
-        ],
-        "type": "Point"
-      },
-      "type": "Feature",
-      "properties": {"type": "ARBRE"}
-    },
-    {
-      "geometry": {
-        "coordinates": [
-          7,
-          2
-        ],
-        "type": "Point"
-      },
-      "type": "Feature",
-      "properties": {"type": "ARBRE"}
-    },
-    {
-      "geometry": {
-        "coordinates": [
-          8,
-          2
-        ],
-        "type": "Point"
-      },
-      "type": "Feature",
-      "properties": {"type": "ARBRE"}
-    },
-    {
-      "geometry": {
-        "coordinates": [
-          9,
-          2
-        ],
-        "type": "Point"
-      },
-      "type": "Feature",
-      "properties": {"type": "HERBE"}
-    },
-    {
-      "geometry": {
-        "coordinates": [
-          0,
-          3
-        ],
-        "type": "Point"
-      },
-      "type": "Feature",
-      "properties": {"type": "ARBRE"}
-    },
-    {
-      "geometry": {
-        "coordinates": [
-          1,
-          3
-        ],
-        "type": "Point"
-      },
-      "type": "Feature",
-      "properties": {"type": "ARBRE"}
-    },
-    {
-      "geometry": {
-        "coordinates": [
-          2,
-          3
-        ],
-        "type": "Point"
-      },
-      "type": "Feature",
-      "properties": {"type": "ARBRE"}
-    },
-    {
-      "geometry": {
-        "coordinates": [
-          3,
-          3
-        ],
-        "type": "Point"
-      },
-      "type": "Feature",
-      "properties": {"type": "HERBE"}
-    },
-    {
-      "geometry": {
-        "coordinates": [
-          4,
-          3
-        ],
-        "type": "Point"
-      },
-      "type": "Feature",
-      "properties": {"type": "ARBRE"}
-    },
-    {
-      "geometry": {
-        "coordinates": [
-          5,
-          3
-        ],
-        "type": "Point"
-      },
-      "type": "Feature",
-      "properties": {"type": "ARBRE"}
-    },
-    {
-      "geometry": {
-        "coordinates": [
-          6,
-          3
-        ],
-        "type": "Point"
-      },
-      "type": "Feature",
-      "properties": {"type": "HERBE"}
-    },
-    {
-      "geometry": {
-        "coordinates": [
-          7,
-          3
-        ],
-        "type": "Point"
-      },
-      "type": "Feature",
-      "properties": {"type": "ARBRE"}
-    },
-    {
-      "geometry": {
-        "coordinates": [
-          8,
-          3
-        ],
-        "type": "Point"
-      },
-      "type": "Feature",
-      "properties": {"type": "ARBRE"}
-    },
-    {
-      "geometry": {
-        "coordinates": [
-          9,
-          3
-        ],
-        "type": "Point"
-      },
-      "type": "Feature",
-      "properties": {"type": "HERBE"}
-    },
-    {
-      "geometry": {
-        "coordinates": [
-          0,
-          4
-        ],
-        "type": "Point"
-      },
-      "type": "Feature",
-      "properties": {"type": "HERBE"}
-    },
-    {
-      "geometry": {
-        "coordinates": [
-          1,
-          4
-        ],
-        "type": "Point"
-      },
-      "type": "Feature",
-      "properties": {"type": "HERBE"}
-    },
-    {
-      "geometry": {
-        "coordinates": [
-          2,
-          4
-        ],
-        "type": "Point"
-      },
-      "type": "Feature",
-      "properties": {"type": "HERBE"}
-    },
-    {
-      "geometry": {
-        "coordinates": [
-          3,
-          4
-        ],
-        "type": "Point"
-      },
-      "type": "Feature",
-      "properties": {"type": "HERBE"}
-    },
-    {
-      "geometry": {
-        "coordinates": [
-          4,
-          4
-        ],
-        "type": "Point"
-      },
-      "type": "Feature",
-      "properties": {"type": "EAU"}
-    },
-    {
-      "geometry": {
-        "coordinates": [
-          5,
-          4
-        ],
-        "type": "Point"
-      },
-      "type": "Feature",
-      "properties": {"type": "EAU"}
-    },
-    {
-      "geometry": {
-        "coordinates": [
           6,
           4
         ],
         "type": "Point"
       },
       "type": "Feature",
-      "properties": {"type": "ARBRE"}
+      "properties": {"type": "HERBE"}
     },
     {
       "geometry": {
@@ -559,7 +559,7 @@
         "type": "Point"
       },
       "type": "Feature",
-      "properties": {"type": "EAU"}
+      "properties": {"type": "HERBE"}
     },
     {
       "geometry": {
@@ -570,7 +570,7 @@
         "type": "Point"
       },
       "type": "Feature",
-      "properties": {"type": "ARBRE"}
+      "properties": {"type": "HERBE"}
     },
     {
       "geometry": {
@@ -581,7 +581,7 @@
         "type": "Point"
       },
       "type": "Feature",
-      "properties": {"type": "ARBRE"}
+      "properties": {"type": "EAU"}
     },
     {
       "geometry": {
@@ -592,7 +592,7 @@
         "type": "Point"
       },
       "type": "Feature",
-      "properties": {"type": "ARBRE"}
+      "properties": {"type": "HERBE"}
     },
     {
       "geometry": {
@@ -603,7 +603,7 @@
         "type": "Point"
       },
       "type": "Feature",
-      "properties": {"type": "EAU"}
+      "properties": {"type": "ARBRE"}
     },
     {
       "geometry": {
@@ -614,7 +614,7 @@
         "type": "Point"
       },
       "type": "Feature",
-      "properties": {"type": "EAU"}
+      "properties": {"type": "HERBE"}
     },
     {
       "geometry": {
@@ -636,7 +636,7 @@
         "type": "Point"
       },
       "type": "Feature",
-      "properties": {"type": "HERBE"}
+      "properties": {"type": "ARBRE"}
     },
     {
       "geometry": {
@@ -647,7 +647,7 @@
         "type": "Point"
       },
       "type": "Feature",
-      "properties": {"type": "EAU"}
+      "properties": {"type": "HERBE"}
     },
     {
       "geometry": {
@@ -658,7 +658,7 @@
         "type": "Point"
       },
       "type": "Feature",
-      "properties": {"type": "ARBRE"}
+      "properties": {"type": "HERBE"}
     },
     {
       "geometry": {
@@ -680,7 +680,7 @@
         "type": "Point"
       },
       "type": "Feature",
-      "properties": {"type": "ARBRE"}
+      "properties": {"type": "HERBE"}
     },
     {
       "geometry": {
@@ -702,7 +702,7 @@
         "type": "Point"
       },
       "type": "Feature",
-      "properties": {"type": "EAU"}
+      "properties": {"type": "HERBE"}
     },
     {
       "geometry": {
@@ -724,7 +724,7 @@
         "type": "Point"
       },
       "type": "Feature",
-      "properties": {"type": "EAU"}
+      "properties": {"type": "ARBRE"}
     },
     {
       "geometry": {
@@ -735,7 +735,7 @@
         "type": "Point"
       },
       "type": "Feature",
-      "properties": {"type": "HERBE"}
+      "properties": {"type": "NOEUD"}
     },
     {
       "geometry": {
@@ -746,7 +746,7 @@
         "type": "Point"
       },
       "type": "Feature",
-      "properties": {"type": "HERBE"}
+      "properties": {"type": "EAU"}
     },
     {
       "geometry": {
@@ -757,7 +757,7 @@
         "type": "Point"
       },
       "type": "Feature",
-      "properties": {"type": "EAU"}
+      "properties": {"type": "ARBRE"}
     },
     {
       "geometry": {
@@ -790,7 +790,7 @@
         "type": "Point"
       },
       "type": "Feature",
-      "properties": {"type": "ARBRE"}
+      "properties": {"type": "EAU"}
     },
     {
       "geometry": {
@@ -801,7 +801,7 @@
         "type": "Point"
       },
       "type": "Feature",
-      "properties": {"type": "HERBE"}
+      "properties": {"type": "ARBRE"}
     },
     {
       "geometry": {
@@ -812,7 +812,7 @@
         "type": "Point"
       },
       "type": "Feature",
-      "properties": {"type": "HERBE"}
+      "properties": {"type": "EAU"}
     },
     {
       "geometry": {
@@ -834,7 +834,7 @@
         "type": "Point"
       },
       "type": "Feature",
-      "properties": {"type": "HERBE"}
+      "properties": {"type": "ARBRE"}
     },
     {
       "geometry": {
@@ -845,7 +845,7 @@
         "type": "Point"
       },
       "type": "Feature",
-      "properties": {"type": "HERBE"}
+      "properties": {"type": "ARBRE"}
     },
     {
       "geometry": {
@@ -856,7 +856,7 @@
         "type": "Point"
       },
       "type": "Feature",
-      "properties": {"type": "HERBE"}
+      "properties": {"type": "ARBRE"}
     },
     {
       "geometry": {
@@ -889,7 +889,7 @@
         "type": "Point"
       },
       "type": "Feature",
-      "properties": {"type": "HERBE"}
+      "properties": {"type": "ARBRE"}
     },
     {
       "geometry": {
@@ -900,7 +900,7 @@
         "type": "Point"
       },
       "type": "Feature",
-      "properties": {"type": "ARBRE"}
+      "properties": {"type": "HERBE"}
     },
     {
       "geometry": {
@@ -911,7 +911,7 @@
         "type": "Point"
       },
       "type": "Feature",
-      "properties": {"type": "EAU"}
+      "properties": {"type": "ARBRE"}
     },
     {
       "geometry": {
@@ -922,7 +922,7 @@
         "type": "Point"
       },
       "type": "Feature",
-      "properties": {"type": "HERBE"}
+      "properties": {"type": "ARBRE"}
     },
     {
       "geometry": {
@@ -977,7 +977,7 @@
         "type": "Point"
       },
       "type": "Feature",
-      "properties": {"type": "HERBE"}
+      "properties": {"type": "EAU"}
     },
     {
       "geometry": {
@@ -988,7 +988,7 @@
         "type": "Point"
       },
       "type": "Feature",
-      "properties": {"type": "EAU"}
+      "properties": {"type": "HERBE"}
     },
     {
       "geometry": {
@@ -999,7 +999,7 @@
         "type": "Point"
       },
       "type": "Feature",
-      "properties": {"type": "EAU"}
+      "properties": {"type": "HERBE"}
     },
     {
       "geometry": {
@@ -1032,7 +1032,7 @@
         "type": "Point"
       },
       "type": "Feature",
-      "properties": {"type": "EAU"}
+      "properties": {"type": "HERBE"}
     },
     {
       "geometry": {
@@ -1043,7 +1043,7 @@
         "type": "Point"
       },
       "type": "Feature",
-      "properties": {"type": "ARBRE"}
+      "properties": {"type": "HERBE"}
     },
     {
       "geometry": {
@@ -1065,7 +1065,7 @@
         "type": "Point"
       },
       "type": "Feature",
-      "properties": {"type": "HERBE"}
+      "properties": {"type": "ARBRE"}
     },
     {
       "geometry": {
