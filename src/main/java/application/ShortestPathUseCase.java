@@ -1,5 +1,6 @@
 package application;
 
+import application.interfaces.PathFindingUseCase;
 import domain.GameMap;
 import domain.MapCell;
 
@@ -60,7 +61,7 @@ public class ShortestPathUseCase implements PathFindingUseCase {
 
     private boolean isWalkable(MapCell cell) {
         return switch (cell.getType()) {
-            case HERBE, NOEUD, ARRETE_HORIZONTAL, ARRETE_VERTICAL -> true;
+            case HERBE, NOEUD, ARRETE_HORIZONTAL, ARRETE_VERTICAL, START, CHATEAU -> true;
             default -> false;
         };
     }
@@ -74,7 +75,10 @@ public class ShortestPathUseCase implements PathFindingUseCase {
             current = previousStep.get(current);
         }
 
+        path.add(current);
+
         Collections.reverse(path);
         return path;
     }
+
 }

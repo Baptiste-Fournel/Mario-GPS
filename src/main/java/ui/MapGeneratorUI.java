@@ -1,6 +1,6 @@
 package ui;
 
-import application.PathFindingUseCase;
+import application.interfaces.PathFindingUseCase;
 import application.PlaceEndPointUseCase;
 import application.PlaceStartPointUseCase;
 import application.ShortestPathUseCase;
@@ -131,7 +131,9 @@ public class MapGeneratorUI extends Application {
         if (x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT) return;
 
         MapCell cell = map.getCell(x, y);
-        if (cell.getType() != MapElementType.HERBE) return;
+        if (cell.getType() != MapElementType.HERBE &&
+                cell.getType() != MapElementType.START &&
+                cell.getType() != MapElementType.CHATEAU) return;
 
         clearCurrentPath();
 

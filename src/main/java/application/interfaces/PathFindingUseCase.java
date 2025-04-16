@@ -1,4 +1,4 @@
-package application;
+package application.interfaces;
 
 import domain.GameMap;
 import application.ShortestPathUseCase.Coordinate;
