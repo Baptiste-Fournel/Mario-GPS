@@ -7,4 +7,6 @@ public enum MapElementType {
     NOEUD,
     ARRETE_HORIZONTAL,
     ARRETE_VERTICAL,
+    CHATEAU,
+    START,
 }

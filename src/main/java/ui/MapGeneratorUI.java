@@ -1,9 +1,13 @@
 package ui;
 
+import application.interfaces.PathFindingUseCase;
 import application.PlaceEndPointUseCase;
 import application.PlaceStartPointUseCase;
 import application.ShortestPathUseCase;
 import application.ShortestPathUseCase.Coordinate;
+import components.MapGenerator;
+import components.MapRenderer;
+import components.PathInterpreter;
 import domain.GameMap;
 import domain.MapCell;
 import domain.MapElementType;
@@ -47,19 +51,23 @@ public class MapGeneratorUI extends Application {
 
     private Canvas canvas;
     private GraphicsContext graphics;
+    private MapRenderer renderer;
 
     private Button startButton;
     private Button endButton;
 
     private final PlaceStartPointUseCase startUseCase = new PlaceStartPointUseCase();
     private final PlaceEndPointUseCase endUseCase = new PlaceEndPointUseCase();
-    private final ShortestPathUseCase pathUseCase = new ShortestPathUseCase();
+    private final PathFindingUseCase pathUseCase = new ShortestPathUseCase();
 
     @Override
     public void start(Stage primaryStage) {
         initializeCanvas();
         loadTiles();
-        generateRandomMap();
+        MapGenerator.generate(map);
+
+        renderer = new MapRenderer(map, graphics, tileImages);
+        renderer.render();
 
         VBox controlPanel = createControlPanel();
         HBox rootLayout = buildMainLayout(controlPanel);
@@ -84,24 +92,6 @@ public class MapGeneratorUI extends Application {
                 tileImages.put(type, new Image(Objects.requireNonNull(getClass().getResource(path)).toExternalForm()));
             } catch (Exception ignored) {}
         }
-    }
-
-    private void generateRandomMap() {
-        List<MapElementType> weights = List.of(
-                MapElementType.HERBE, MapElementType.HERBE, MapElementType.HERBE, MapElementType.HERBE,
-                MapElementType.ARBRE, MapElementType.ARBRE,
-                MapElementType.EAU
-        );
-
-        Random random = new Random();
-        for (int y = 0; y < HEIGHT; y++) {
-            for (int x = 0; x < WIDTH; x++) {
-                MapElementType type = weights.get(random.nextInt(weights.size()));
-                map.setCell(x, y, new MapCell(x, y, type));
-            }
-        }
-
-        renderMap();
     }
 
     private VBox createControlPanel() {
@@ -141,7 +131,9 @@ public class MapGeneratorUI extends Application {
         if (x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT) return;
 
         MapCell cell = map.getCell(x, y);
-        if (cell.getType() != MapElementType.HERBE) return;
+        if (cell.getType() != MapElementType.HERBE &&
+                cell.getType() != MapElementType.START &&
+                cell.getType() != MapElementType.CHATEAU) return;
 
         clearCurrentPath();
 
@@ -156,7 +148,7 @@ public class MapGeneratorUI extends Application {
         }
 
         resetSelection();
-        renderMap();
+        renderer.render();
         exportGeoJson();
     }
 
@@ -175,18 +167,9 @@ public class MapGeneratorUI extends Application {
         }
 
         currentPath = path;
+        PathInterpreter.applyPath(currentPath, map);
 
-        Coordinate prev = new Coordinate(startNode.getX(), startNode.getY());
-        for (int i = 0; i < path.size(); i++) {
-            Coordinate curr = path.get(i);
-            Coordinate next = (i + 1 < path.size()) ? path.get(i + 1) : null;
-
-            MapElementType typeToSet = determineTileType(prev, curr, next);
-            map.getCell(curr.x(), curr.y()).setType(typeToSet);
-            prev = curr;
-        }
-
-        renderMap();
+        renderer.render();
         exportGeoJson();
     }
 
@@ -206,32 +189,9 @@ public class MapGeneratorUI extends Application {
         startNode = null;
         endNode = null;
         currentPath.clear();
-        generateRandomMap();
-        renderMap();
+        MapGenerator.generate(map);
+        renderer.render();
         exportGeoJson();
-    }
-
-    private MapElementType determineTileType(Coordinate prev, Coordinate curr, Coordinate next) {
-        if (next == null) return MapElementType.NOEUD;
-
-        boolean horizontal = (curr.y() == prev.y() && curr.y() == next.y());
-        boolean vertical = (curr.x() == prev.x() && curr.x() == next.x());
-
-        return (horizontal) ? MapElementType.ARRETE_HORIZONTAL :
-                (vertical) ? MapElementType.ARRETE_VERTICAL :
-                        MapElementType.NOEUD;
-    }
-
-    private void renderMap() {
-        for (int y = 0; y < HEIGHT; y++) {
-            for (int x = 0; x < WIDTH; x++) {
-                MapElementType type = map.getCell(x, y).getType();
-                Image img = tileImages.get(type);
-                if (img != null) {
-                    graphics.drawImage(img, x * TILE_SIZE, y * TILE_SIZE);
-                }
-            }
-        }
     }
 
     private void exportGeoJson() {

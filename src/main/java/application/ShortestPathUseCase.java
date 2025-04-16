@@ -1,14 +1,14 @@
 package application;
 
+import application.interfaces.PathFindingUseCase;
 import domain.GameMap;
 import domain.MapCell;
 
 import java.util.*;
 
-public class ShortestPathUseCase {
+public class ShortestPathUseCase implements PathFindingUseCase {
 
-    public record Coordinate(int x, int y) {
-    }
+    public record Coordinate(int x, int y) {}
 
     private static final List<Coordinate> DIRECTIONS = List.of(
             new Coordinate(0, -1),
@@ -17,6 +17,7 @@ public class ShortestPathUseCase {
             new Coordinate(1, 0)
     );
 
+    @Override
     public List<Coordinate> execute(GameMap map, Coordinate start, Coordinate goal) {
         int mapWidth = map.getWidth();
         int mapHeight = map.getHeight();
@@ -60,7 +61,7 @@ public class ShortestPathUseCase {
 
     private boolean isWalkable(MapCell cell) {
         return switch (cell.getType()) {
-            case HERBE, NOEUD, ARRETE_HORIZONTAL, ARRETE_VERTICAL -> true;
+            case HERBE, NOEUD, ARRETE_HORIZONTAL, ARRETE_VERTICAL, START, CHATEAU -> true;
             default -> false;
         };
     }
@@ -74,7 +75,10 @@ public class ShortestPathUseCase {
             current = previousStep.get(current);
         }
 
+        path.add(current);
+
         Collections.reverse(path);
         return path;
     }
+
 }
