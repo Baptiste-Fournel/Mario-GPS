@@ -27,7 +27,7 @@
       "properties": {
         "x": 1,
         "y": 0,
-        "type": "ARBRE"
+        "type": "HERBE"
       }
     },
     {
@@ -117,7 +117,7 @@
       "properties": {
         "x": 7,
         "y": 0,
-        "type": "ARBRE"
+        "type": "HERBE"
       }
     },
     {
@@ -132,7 +132,7 @@
       "properties": {
         "x": 8,
         "y": 0,
-        "type": "ARBRE"
+        "type": "HERBE"
       }
     },
     {
@@ -147,7 +147,7 @@
       "properties": {
         "x": 9,
         "y": 0,
-        "type": "ARBRE"
+        "type": "NOEUD"
       }
     },
     {
@@ -177,7 +177,7 @@
       "properties": {
         "x": 1,
         "y": 1,
-        "type": "EAU"
+        "type": "HERBE"
       }
     },
     {
@@ -252,7 +252,7 @@
       "properties": {
         "x": 6,
         "y": 1,
-        "type": "ARBRE"
+        "type": "HERBE"
       }
     },
     {
@@ -267,7 +267,7 @@
       "properties": {
         "x": 7,
         "y": 1,
-        "type": "ARBRE"
+        "type": "HERBE"
       }
     },
     {
@@ -282,7 +282,7 @@
       "properties": {
         "x": 8,
         "y": 1,
-        "type": "EAU"
+        "type": "ARBRE"
       }
     },
     {
@@ -297,7 +297,7 @@
       "properties": {
         "x": 9,
         "y": 1,
-        "type": "ARBRE"
+        "type": "ARRETE_VERTICAL"
       }
     },
     {
@@ -312,7 +312,7 @@
       "properties": {
         "x": 0,
         "y": 2,
-        "type": "ARBRE"
+        "type": "HERBE"
       }
     },
     {
@@ -327,7 +327,7 @@
       "properties": {
         "x": 1,
         "y": 2,
-        "type": "ARBRE"
+        "type": "HERBE"
       }
     },
     {
@@ -342,7 +342,7 @@
       "properties": {
         "x": 2,
         "y": 2,
-        "type": "EAU"
+        "type": "ARBRE"
       }
     },
     {
@@ -372,7 +372,7 @@
       "properties": {
         "x": 4,
         "y": 2,
-        "type": "EAU"
+        "type": "HERBE"
       }
     },
     {
@@ -387,7 +387,7 @@
       "properties": {
         "x": 5,
         "y": 2,
-        "type": "HERBE"
+        "type": "ARBRE"
       }
     },
     {
@@ -402,7 +402,7 @@
       "properties": {
         "x": 6,
         "y": 2,
-        "type": "HERBE"
+        "type": "EAU"
       }
     },
     {
@@ -417,7 +417,7 @@
       "properties": {
         "x": 7,
         "y": 2,
-        "type": "HERBE"
+        "type": "EAU"
       }
     },
     {
@@ -432,7 +432,7 @@
       "properties": {
         "x": 8,
         "y": 2,
-        "type": "HERBE"
+        "type": "NOEUD"
       }
     },
     {
@@ -447,7 +447,7 @@
       "properties": {
         "x": 9,
         "y": 2,
-        "type": "HERBE"
+        "type": "NOEUD"
       }
     },
     {
@@ -462,7 +462,7 @@
       "properties": {
         "x": 0,
         "y": 3,
-        "type": "EAU"
+        "type": "HERBE"
       }
     },
     {
@@ -522,7 +522,7 @@
       "properties": {
         "x": 4,
         "y": 3,
-        "type": "ARBRE"
+        "type": "EAU"
       }
     },
     {
@@ -552,7 +552,7 @@
       "properties": {
         "x": 6,
         "y": 3,
-        "type": "ARBRE"
+        "type": "HERBE"
       }
     },
     {
@@ -567,7 +567,7 @@
       "properties": {
         "x": 7,
         "y": 3,
-        "type": "EAU"
+        "type": "HERBE"
       }
     },
     {
@@ -582,7 +582,7 @@
       "properties": {
         "x": 8,
         "y": 3,
-        "type": "ARBRE"
+        "type": "ARRETE_VERTICAL"
       }
     },
     {
@@ -597,7 +597,7 @@
       "properties": {
         "x": 9,
         "y": 3,
-        "type": "HERBE"
+        "type": "EAU"
       }
     },
     {
@@ -642,7 +642,7 @@
       "properties": {
         "x": 2,
         "y": 4,
-        "type": "EAU"
+        "type": "ARBRE"
       }
     },
     {
@@ -687,7 +687,7 @@
       "properties": {
         "x": 5,
         "y": 4,
-        "type": "HERBE"
+        "type": "ARBRE"
       }
     },
     {
@@ -702,7 +702,7 @@
       "properties": {
         "x": 6,
         "y": 4,
-        "type": "ARBRE"
+        "type": "HERBE"
       }
     },
     {
@@ -717,7 +717,7 @@
       "properties": {
         "x": 7,
         "y": 4,
-        "type": "ARBRE"
+        "type": "HERBE"
       }
     },
     {
@@ -732,7 +732,7 @@
       "properties": {
         "x": 8,
         "y": 4,
-        "type": "HERBE"
+        "type": "ARRETE_VERTICAL"
       }
     },
     {
@@ -747,7 +747,7 @@
       "properties": {
         "x": 9,
         "y": 4,
-        "type": "ARBRE"
+        "type": "HERBE"
       }
     },
     {
@@ -762,7 +762,7 @@
       "properties": {
         "x": 0,
         "y": 5,
-        "type": "ARBRE"
+        "type": "HERBE"
       }
     },
     {
@@ -807,7 +807,7 @@
       "properties": {
         "x": 3,
         "y": 5,
-        "type": "EAU"
+        "type": "HERBE"
       }
     },
     {
@@ -822,7 +822,7 @@
       "properties": {
         "x": 4,
         "y": 5,
-        "type": "EAU"
+        "type": "HERBE"
       }
     },
     {
@@ -837,7 +837,7 @@
       "properties": {
         "x": 5,
         "y": 5,
-        "type": "ARBRE"
+        "type": "EAU"
       }
     },
     {
@@ -852,7 +852,7 @@
       "properties": {
         "x": 6,
         "y": 5,
-        "type": "HERBE"
+        "type": "EAU"
       }
     },
     {
@@ -867,7 +867,7 @@
       "properties": {
         "x": 7,
         "y": 5,
-        "type": "HERBE"
+        "type": "ARBRE"
       }
     },
     {
@@ -882,7 +882,7 @@
       "properties": {
         "x": 8,
         "y": 5,
-        "type": "HERBE"
+        "type": "ARRETE_VERTICAL"
       }
     },
     {
@@ -957,7 +957,7 @@
       "properties": {
         "x": 3,
         "y": 6,
-        "type": "EAU"
+        "type": "HERBE"
       }
     },
     {
@@ -987,7 +987,7 @@
       "properties": {
         "x": 5,
         "y": 6,
-        "type": "ARBRE"
+        "type": "HERBE"
       }
     },
     {
@@ -1032,7 +1032,7 @@
       "properties": {
         "x": 8,
         "y": 6,
-        "type": "ARBRE"
+        "type": "ARRETE_VERTICAL"
       }
     },
     {
@@ -1047,7 +1047,7 @@
       "properties": {
         "x": 9,
         "y": 6,
-        "type": "ARBRE"
+        "type": "EAU"
       }
     },
     {
@@ -1062,7 +1062,7 @@
       "properties": {
         "x": 0,
         "y": 7,
-        "type": "HERBE"
+        "type": "EAU"
       }
     },
     {
@@ -1092,7 +1092,7 @@
       "properties": {
         "x": 2,
         "y": 7,
-        "type": "ARBRE"
+        "type": "HERBE"
       }
     },
     {
@@ -1107,7 +1107,7 @@
       "properties": {
         "x": 3,
         "y": 7,
-        "type": "ARBRE"
+        "type": "HERBE"
       }
     },
     {
@@ -1122,7 +1122,7 @@
       "properties": {
         "x": 4,
         "y": 7,
-        "type": "HERBE"
+        "type": "EAU"
       }
     },
     {
@@ -1137,7 +1137,7 @@
       "properties": {
         "x": 5,
         "y": 7,
-        "type": "HERBE"
+        "type": "EAU"
       }
     },
     {
@@ -1167,7 +1167,7 @@
       "properties": {
         "x": 7,
         "y": 7,
-        "type": "HERBE"
+        "type": "NOEUD"
       }
     },
     {
@@ -1182,7 +1182,7 @@
       "properties": {
         "x": 8,
         "y": 7,
-        "type": "HERBE"
+        "type": "NOEUD"
       }
     },
     {
@@ -1212,7 +1212,7 @@
       "properties": {
         "x": 0,
         "y": 8,
-        "type": "HERBE"
+        "type": "ARBRE"
       }
     },
     {
@@ -1227,7 +1227,7 @@
       "properties": {
         "x": 1,
         "y": 8,
-        "type": "EAU"
+        "type": "HERBE"
       }
     },
     {
@@ -1242,7 +1242,7 @@
       "properties": {
         "x": 2,
         "y": 8,
-        "type": "HERBE"
+        "type": "EAU"
       }
     },
     {
@@ -1257,7 +1257,7 @@
       "properties": {
         "x": 3,
         "y": 8,
-        "type": "HERBE"
+        "type": "NOEUD"
       }
     },
     {
@@ -1272,7 +1272,7 @@
       "properties": {
         "x": 4,
         "y": 8,
-        "type": "ARBRE"
+        "type": "ARRETE_HORIZONTAL"
       }
     },
     {
@@ -1287,7 +1287,7 @@
       "properties": {
         "x": 5,
         "y": 8,
-        "type": "HERBE"
+        "type": "ARRETE_HORIZONTAL"
       }
     },
     {
@@ -1302,7 +1302,7 @@
       "properties": {
         "x": 6,
         "y": 8,
-        "type": "HERBE"
+        "type": "ARRETE_HORIZONTAL"
       }
     },
     {
@@ -1317,7 +1317,7 @@
       "properties": {
         "x": 7,
         "y": 8,
-        "type": "ARBRE"
+        "type": "NOEUD"
       }
     },
     {
@@ -1332,7 +1332,7 @@
       "properties": {
         "x": 8,
         "y": 8,
-        "type": "EAU"
+        "type": "HERBE"
       }
     },
     {
@@ -1347,7 +1347,7 @@
       "properties": {
         "x": 9,
         "y": 8,
-        "type": "HERBE"
+        "type": "EAU"
       }
     },
     {
@@ -1362,7 +1362,7 @@
       "properties": {
         "x": 0,
         "y": 9,
-        "type": "HERBE"
+        "type": "EAU"
       }
     },
     {
@@ -1377,7 +1377,7 @@
       "properties": {
         "x": 1,
         "y": 9,
-        "type": "HERBE"
+        "type": "NOEUD"
       }
     },
     {
@@ -1392,7 +1392,7 @@
       "properties": {
         "x": 2,
         "y": 9,
-        "type": "HERBE"
+        "type": "ARRETE_HORIZONTAL"
       }
     },
     {
@@ -1407,7 +1407,7 @@
       "properties": {
         "x": 3,
         "y": 9,
-        "type": "HERBE"
+        "type": "NOEUD"
       }
     },
     {
@@ -1422,7 +1422,7 @@
       "properties": {
         "x": 4,
         "y": 9,
-        "type": "ARBRE"
+        "type": "EAU"
       }
     },
     {
@@ -1437,7 +1437,7 @@
       "properties": {
         "x": 5,
         "y": 9,
-        "type": "ARBRE"
+        "type": "HERBE"
       }
     },
     {
@@ -1452,7 +1452,7 @@
       "properties": {
         "x": 6,
         "y": 9,
-        "type": "EAU"
+        "type": "HERBE"
       }
     },
     {
@@ -1482,7 +1482,7 @@
       "properties": {
         "x": 8,
         "y": 9,
-        "type": "ARBRE"
+        "type": "HERBE"
       }
     },
     {
