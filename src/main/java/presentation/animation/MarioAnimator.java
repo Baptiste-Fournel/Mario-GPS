@@ -33,10 +33,28 @@ public class MarioAnimator {
     public void animate(List<Coordinate> path, Runnable onFinished) {
         Timeline timeline = new Timeline();
 
-        PathInterpreter.applyPath(path, map);
-
         for (int i = 1; i < path.size(); i++) {
-            KeyFrame keyFrame = getKeyFrame(path, i);
+            final int index = i;
+            KeyFrame keyFrame = new KeyFrame(Duration.millis(200 * i), e -> {
+                Coordinate current = path.get(index);
+                Coordinate previous = path.get(index - 1);
+
+                if (index > 1) {
+                    Coordinate before = path.get(index - 2);
+                    MapElementType type = PathInterpreter.determineTileType(before, previous, current);
+                    map.getCell(previous.x(), previous.y()).setType(type);
+                }
+
+                onMarioPositionUpdate.accept(index < path.size() - 1 ? current : null);
+                renderer.render();
+
+                if (index < path.size() - 1) {
+                    graphics.drawImage(marioImage,
+                            current.x() * renderer.tileSize(),
+                            current.y() * renderer.tileSize(),
+                            renderer.tileSize(), renderer.tileSize());
+                }
+            });
             timeline.getKeyFrames().add(keyFrame);
         }
 
@@ -48,23 +66,4 @@ public class MarioAnimator {
 
         timeline.play();
     }
-
-    private KeyFrame getKeyFrame(List<Coordinate> path, int i) {
-        final int index = i;
-        KeyFrame keyFrame = new KeyFrame(Duration.millis(200 * i), e -> {
-            Coordinate current = path.get(index);
-
-            onMarioPositionUpdate.accept(index < path.size() - 1 ? current : null);
-            renderer.render();
-
-            if (index < path.size() - 1) {
-                graphics.drawImage(marioImage,
-                        current.x() * renderer.tileSize(),
-                        current.y() * renderer.tileSize(),
-                        renderer.tileSize(), renderer.tileSize());
-            }
-        });
-        return keyFrame;
-    }
-
 }

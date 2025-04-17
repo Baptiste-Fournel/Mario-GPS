@@ -4,10 +4,28 @@ import domain.GameMap;
 import domain.MapElementType;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import lombok.Setter;
 
 import java.util.Map;
 
-public record MapRenderer(GameMap map, GraphicsContext graphics, Map<MapElementType, Image> tileImages, int tileSize) {
+public class MapRenderer {
+
+    private final GameMap map;
+    private final GraphicsContext graphics;
+    private final Map<MapElementType, Image> tileImages;
+    @Setter
+    private int tileSize;
+
+    public MapRenderer(GameMap map, GraphicsContext graphics, Map<MapElementType, Image> tileImages, int tileSize) {
+        this.map = map;
+        this.graphics = graphics;
+        this.tileImages = tileImages;
+        this.tileSize = tileSize;
+    }
+
+    public int tileSize() {
+        return tileSize;
+    }
 
     public void render() {
         for (int y = 0; y < map.getHeight(); y++) {

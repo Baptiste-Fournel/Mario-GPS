@@ -2,16 +2,14 @@ package presentation.ui;
 
 import application.PlaceEndPointUseCase;
 import application.PlaceStartPointUseCase;
-import application.ShortestPathUseCase;
-import application.interfaces.PathFindingUseCase;
 import application.ShortestPathUseCase.Coordinate;
+import application.interfaces.PathFindingUseCase;
 import components.MapGenerator;
 import components.MapRenderer;
 import domain.GameMap;
 import domain.MapCell;
 import domain.MapElementType;
 import infrastructure.GeoJsonExporter;
-import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -25,7 +23,8 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
+import lombok.Getter;
+import lombok.Setter;
 import org.json.JSONObject;
 import presentation.animation.MarioAnimator;
 
@@ -33,22 +32,25 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 
-public class MapGeneratorUI extends Application {
+public class MapGeneratorUI {
 
-    private static final int WIDTH = 30;
-    private static final int HEIGHT = 30;
+    private final GameMap map;
+    private final Canvas canvas;
+    private final GraphicsContext graphics;
+    private final Map<MapElementType, Image> tileImages;
+    private final Image castleImage;
+    private final Image marioImage;
+    private final PlaceStartPointUseCase startUseCase;
+    private final PlaceEndPointUseCase endUseCase;
+    private final PathFindingUseCase pathUseCase;
+    private final MapRenderer renderer;
 
-    private final Map<MapElementType, Image> tileImages = new HashMap<>();
-    private Image marioImage;
-    private Image castleImage;
+    @Getter
+    private final HBox rootLayout;
 
-    private int tileSize;
-    private Canvas canvas;
-    private GraphicsContext graphics;
-
-    private GameMap map;
-    private MapRenderer renderer;
+    @Setter
     private MarioAnimator marioAnimator;
+    private int tileSize;
 
     private MapCell startNode;
     private MapCell endNode;
@@ -60,52 +62,33 @@ public class MapGeneratorUI extends Application {
     private Button startButton;
     private Button endButton;
 
-    private final PlaceStartPointUseCase startUseCase = new PlaceStartPointUseCase();
-    private final PlaceEndPointUseCase endUseCase = new PlaceEndPointUseCase();
-    private final PathFindingUseCase pathUseCase = new ShortestPathUseCase();
+    public MapGeneratorUI(GameMap map, Canvas canvas, Map<MapElementType, Image> tileImages, Image marioImage, Image castleImage,
+                          PlaceStartPointUseCase startUseCase, PlaceEndPointUseCase endUseCase,
+                          PathFindingUseCase pathUseCase, MapRenderer renderer, MarioAnimator marioAnimator) {
 
-    @Override
-    public void start(Stage primaryStage) {
-        initializeCanvas();
-        loadTiles();
-
-        this.map = new GameMap(WIDTH, HEIGHT);
-        MapGenerator.generate(map);
+        this.map = map;
+        this.canvas = canvas;
+        this.graphics = canvas.getGraphicsContext2D();
+        this.tileImages = tileImages;
+        this.marioImage = marioImage;
+        this.castleImage = castleImage;
+        this.startUseCase = startUseCase;
+        this.endUseCase = endUseCase;
+        this.pathUseCase = pathUseCase;
+        this.renderer = renderer;
+        this.marioAnimator = marioAnimator;
 
         VBox controlPanel = createControlPanel();
-        HBox rootLayout = buildMainLayout(controlPanel);
-        Scene scene = new Scene(rootLayout);
+        this.rootLayout = buildMainLayout(controlPanel);
 
-        primaryStage.setTitle("Mario GPS");
-        primaryStage.setScene(scene);
-        primaryStage.show();
-
-        updateTileSizeAndRedraw((int) scene.getWidth(), (int) scene.getHeight());
-
-        scene.widthProperty().addListener((_, _, newVal) ->
-                updateTileSizeAndRedraw(newVal.intValue(), (int) scene.getHeight()));
-        scene.heightProperty().addListener((_, _, newVal) ->
-                updateTileSizeAndRedraw((int) scene.getWidth(), newVal.intValue()));
-
-        exportGeoJson();
-    }
-
-    private void initializeCanvas() {
-        canvas = new Canvas();
-        graphics = canvas.getGraphicsContext2D();
         canvas.setOnMouseClicked(event -> handleCanvasClick((int) event.getX() / tileSize, (int) event.getY() / tileSize));
     }
 
-    private void loadTiles() {
-        for (MapElementType type : MapElementType.values()) {
-            try {
-                String path = "/tiles/" + type.name().toLowerCase() + ".png";
-                tileImages.put(type, new Image(Objects.requireNonNull(getClass().getResource(path)).toExternalForm()));
-            } catch (Exception ignored) {}
-        }
-
-        marioImage = new Image(Objects.requireNonNull(getClass().getResource("/tiles/mario.png")).toExternalForm());
-        castleImage = new Image(Objects.requireNonNull(getClass().getResource("/tiles/chateau.png")).toExternalForm());
+    public void onSceneReady(Scene scene) {
+        scene.widthProperty().addListener((_, _, newVal) -> updateTileSizeAndRedraw(newVal.intValue(), (int) scene.getHeight()));
+        scene.heightProperty().addListener((_, _, newVal) -> updateTileSizeAndRedraw((int) scene.getWidth(), newVal.intValue()));
+        updateTileSizeAndRedraw((int) scene.getWidth(), (int) scene.getHeight());
+        exportGeoJson();
     }
 
     private VBox createControlPanel() {
@@ -144,25 +127,18 @@ public class MapGeneratorUI extends Application {
         double canvasRatio = 0.8;
         int availableWidth = (int) (windowWidth * canvasRatio);
         int availableHeight = windowHeight - 40;
-        tileSize = Math.min(availableWidth / WIDTH, availableHeight / HEIGHT);
+        tileSize = Math.min(availableWidth / map.getWidth(), availableHeight / map.getHeight());
 
-        canvas.setWidth(tileSize * WIDTH);
-        canvas.setHeight(tileSize * HEIGHT);
+        canvas.setWidth(tileSize * map.getWidth());
+        canvas.setHeight(tileSize * map.getHeight());
 
-        renderer = new MapRenderer(map, graphics, tileImages, tileSize);
-        marioAnimator = new MarioAnimator(
-                graphics,
-                renderer,
-                map,
-                marioImage,
-                this::drawSpecialImages
-        );
+        renderer.setTileSize(tileSize);
         renderer.render();
         drawSpecialImages(null);
     }
 
     private void handleCanvasClick(int x, int y) {
-        if (x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT) return;
+        if (x < 0 || x >= map.getWidth() || y < 0 || y >= map.getHeight()) return;
 
         MapCell cell = map.getCell(x, y);
         if (cell.getType() != MapElementType.HERBE &&
@@ -205,7 +181,7 @@ public class MapGeneratorUI extends Application {
         });
     }
 
-    private void drawSpecialImages(Coordinate marioPosition) {
+    public void drawSpecialImages(Coordinate marioPosition) {
         if (startNode != null)
             graphics.drawImage(tileImages.get(MapElementType.START), startNode.getX() * tileSize, startNode.getY() * tileSize, tileSize, tileSize);
 
@@ -288,9 +264,5 @@ public class MapGeneratorUI extends Application {
 
     private void resetSelection() {
         setSelectionMode(false, false);
-    }
-
-    public static void main(String[] args) {
-        launch(args);
     }
 }

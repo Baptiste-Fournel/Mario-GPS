@@ -1,9 +1,9 @@
 package presentation.ui;
 
+import presentation.AppOrchestrator;
+
 public class Main {
     public static void main(String[] args) {
-
-        MapGeneratorUI.main(args);
-
+        AppOrchestrator.main(args);
     }
 }
