@@ -12,6 +12,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
+import java.util.stream.IntStream;
+
 public class MapUIBuilder {
 
     private final Button startButton;
@@ -19,6 +21,8 @@ public class MapUIBuilder {
     private final Button calculateButton;
     private final Button resetButton;
     private final ComboBox<PathAlgorithm> algoSelector;
+    private final ComboBox<Integer> widthSelector;
+    private final ComboBox<Integer> heightSelector;
     private final Label timerLabel;
 
     private final MapInteractionHandler interactionHandler;
@@ -45,6 +49,17 @@ public class MapUIBuilder {
         algoSelector.setValue(pathController.getCurrentAlgorithm());
         algoSelector.getStyleClass().add("algo-select");
 
+        widthSelector = new ComboBox<>();
+        heightSelector = new ComboBox<>();
+        IntStream.rangeClosed(5, 100).forEach(i -> {
+            widthSelector.getItems().add(i);
+            heightSelector.getItems().add(i);
+        });
+        widthSelector.setValue(20);
+        heightSelector.setValue(20);
+        widthSelector.setPromptText("Largeur");
+        heightSelector.setPromptText("Hauteur");
+
         setActions();
     }
 
@@ -65,16 +80,21 @@ public class MapUIBuilder {
             canvas.setCursor(Cursor.CROSSHAIR);
         });
 
-        calculateButton.setOnAction(e ->
-                pathController.calculateAndAnimate(mapGeneratorUI.getMarioAnimator(), timerLabel)
-        );
+        calculateButton.setOnAction(e -> {
+            mapGeneratorUI.clearCurrentPath();
+            pathController.calculateAndAnimate(
+                    mapGeneratorUI.getMarioAnimator(), timerLabel
+            );
+        });
 
         resetButton.setOnAction(e -> {
+            int width = widthSelector.getValue();
+            int height = heightSelector.getValue();
+            mapGeneratorUI.regenerateMap(width, height);
             interactionHandler.reset();
             pathController.getCurrentPath().clear();
+            pathController.getModifiedCells().clear();
             timerLabel.setText("Temps d'exécution : ");
-            mapGeneratorUI.getRenderer().render();
-            mapGeneratorUI.drawSpecialImages(null);
         });
 
         algoSelector.setOnAction(e -> {
@@ -92,7 +112,7 @@ public class MapUIBuilder {
     }
 
     public HBox build() {
-        VBox controlPanel = new VBox(20, startButton, endButton, calculateButton, resetButton, algoSelector, timerLabel);
+        VBox controlPanel = new VBox(20, startButton, endButton, calculateButton, resetButton, algoSelector, widthSelector, heightSelector, timerLabel);
         controlPanel.setAlignment(Pos.TOP_CENTER);
         controlPanel.setPadding(new Insets(20));
 

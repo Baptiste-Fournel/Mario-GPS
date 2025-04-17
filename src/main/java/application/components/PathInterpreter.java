@@ -1,6 +1,6 @@
 package application.components;
 
-import application.algorithms.DijkstraPathFinder.Coordinate;
+import domain.Coordinate;
 import domain.MapElementType;
 
 public class PathInterpreter {

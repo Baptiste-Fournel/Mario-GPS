@@ -1,6 +1,6 @@
 package presentation.ui;
 
-import application.algorithms.DijkstraPathFinder.Coordinate;
+import domain.Coordinate;
 import application.usecases.PlaceEndPointUseCase;
 import application.usecases.PlaceStartPointUseCase;
 import domain.GameMap;
@@ -19,11 +19,11 @@ public class MapInteractionHandler {
     @Getter
     private MapCell endNode;
 
-    @Setter
     @Getter
+    @Setter
     private boolean selectingStart;
-    @Setter
     @Getter
+    @Setter
     private boolean selectingEnd;
 
     public MapInteractionHandler(PlaceStartPointUseCase startUseCase, PlaceEndPointUseCase endUseCase) {
@@ -35,9 +35,8 @@ public class MapInteractionHandler {
         if (x < 0 || x >= map.getWidth() || y < 0 || y >= map.getHeight()) return false;
 
         MapCell cell = map.getCell(x, y);
-        if (cell.getType() != MapElementType.HERBE &&
-                cell.getType() != MapElementType.START &&
-                cell.getType() != MapElementType.CHATEAU) return false;
+        if (cell.getType() != MapElementType.HERBE && cell.getType() != MapElementType.START && cell.getType() != MapElementType.CHATEAU)
+            return false;
 
         if (isStartSelection) {
             startUseCase.execute(map, x, y, startNode);
@@ -53,6 +52,8 @@ public class MapInteractionHandler {
     public void reset() {
         startNode = null;
         endNode = null;
+        selectingStart = false;
+        selectingEnd = false;
     }
 
     public Coordinate getStartCoordinate() {
@@ -62,5 +63,4 @@ public class MapInteractionHandler {
     public Coordinate getEndCoordinate() {
         return endNode == null ? null : new Coordinate(endNode.getX(), endNode.getY());
     }
-
 }

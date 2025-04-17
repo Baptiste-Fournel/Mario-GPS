@@ -1,9 +1,10 @@
 package presentation.ui;
 
-import application.algorithms.DijkstraPathFinder.Coordinate;
+import domain.Coordinate;
+import application.components.MapRenderer;
 import application.usecases.PlaceEndPointUseCase;
 import application.usecases.PlaceStartPointUseCase;
-import application.components.MapRenderer;
+import application.usecases.UpdateMapSizeUseCase;
 import domain.GameMap;
 import domain.MapCell;
 import domain.MapElementType;
@@ -27,15 +28,15 @@ import java.util.Set;
 
 public class MapGeneratorUI {
 
-    private final GameMap map;
+    private GameMap map;
     private final Canvas canvas;
     private final GraphicsContext graphics;
     private final Map<MapElementType, Image> tileImages;
-    private final Image marioImage;
     private final Image castleImage;
+    private final Image marioImage;
 
     @Getter
-    private final MapRenderer renderer;
+    private MapRenderer renderer;
     private final MapInteractionHandler interactionHandler;
     private final PathCalculationController pathController;
     private final MapUIBuilder builder;
@@ -47,6 +48,7 @@ public class MapGeneratorUI {
     @Setter
     private MarioAnimator marioAnimator;
 
+    private final UpdateMapSizeUseCase updateMapSizeUseCase;
     private int tileSize;
 
     public MapGeneratorUI(GameMap map, Canvas canvas, Map<MapElementType, Image> tileImages, Image marioImage, Image castleImage, PlaceStartPointUseCase startUseCase, PlaceEndPointUseCase endUseCase, MapRenderer renderer, MarioAnimator marioAnimator) {
@@ -59,24 +61,15 @@ public class MapGeneratorUI {
         this.castleImage = castleImage;
         this.renderer = renderer;
         this.marioAnimator = marioAnimator;
+        this.updateMapSizeUseCase = new UpdateMapSizeUseCase();
 
         this.interactionHandler = new MapInteractionHandler(startUseCase, endUseCase);
         this.pathController = new PathCalculationController(map, renderer, interactionHandler);
-        this.builder = new MapUIBuilder(canvas, interactionHandler, pathController, this);
 
+        this.builder = new MapUIBuilder(canvas, interactionHandler, pathController, this);
         this.rootLayout = builder.build();
 
-        canvas.setOnMouseClicked(event -> {
-            int x = (int) event.getX() / tileSize;
-            int y = (int) event.getY() / tileSize;
-
-            if (interactionHandler.handleClick(map, x, y, builder.isSelectingStart(), builder.isSelectingEnd())) {
-                clearCurrentPath();
-                renderer.render();
-                drawSpecialImages(null);
-                exportGeoJson();
-            }
-        });
+        attachCanvasClickHandler();
     }
 
     public void onSceneReady(Scene scene) {
@@ -91,7 +84,6 @@ public class MapGeneratorUI {
         double canvasRatio = 0.8;
         int availableWidth = (int) (windowWidth * canvasRatio);
         int availableHeight = windowHeight - 40;
-
         tileSize = Math.min(availableWidth / map.getWidth(), availableHeight / map.getHeight());
 
         canvas.setWidth(tileSize * map.getWidth());
@@ -106,17 +98,14 @@ public class MapGeneratorUI {
         MapCell startNode = interactionHandler.getStartNode();
         MapCell endNode = interactionHandler.getEndNode();
 
-        if (startNode != null) {
+        if (startNode != null)
             graphics.drawImage(tileImages.get(MapElementType.START), startNode.getX() * tileSize, startNode.getY() * tileSize, tileSize, tileSize);
-        }
 
-        if (endNode != null) {
+        if (endNode != null)
             graphics.drawImage(castleImage, endNode.getX() * tileSize, endNode.getY() * tileSize, tileSize, tileSize);
-        }
 
-        if (marioPosition != null) {
+        if (marioPosition != null)
             graphics.drawImage(marioImage, marioPosition.x() * tileSize, marioPosition.y() * tileSize, tileSize, tileSize);
-        }
     }
 
     public void clearCurrentPath() {
@@ -130,6 +119,38 @@ public class MapGeneratorUI {
 
         path.clear();
         modified.clear();
+    }
+
+    public void regenerateMap(int newWidth, int newHeight) {
+        this.map = updateMapSizeUseCase.execute(newWidth, newHeight);
+
+        interactionHandler.reset();
+        pathController.updateMap(map);
+
+        this.renderer = new MapRenderer(map, graphics, tileImages, tileSize);
+        pathController.updateRenderer(renderer);
+
+        this.marioAnimator = new MarioAnimator(graphics, renderer, map, marioImage, this::drawSpecialImages);
+
+        updateTileSizeAndRedraw((int) canvas.getScene().getWidth(), (int) canvas.getScene().getHeight());
+        drawSpecialImages(null);
+        exportGeoJson();
+
+        attachCanvasClickHandler();
+    }
+
+    private void attachCanvasClickHandler() {
+        canvas.setOnMouseClicked(event -> {
+            int x = (int) event.getX() / tileSize;
+            int y = (int) event.getY() / tileSize;
+
+            if (interactionHandler.handleClick(map, x, y, builder.isSelectingStart(), builder.isSelectingEnd())) {
+                clearCurrentPath();
+                renderer.render();
+                drawSpecialImages(null);
+                exportGeoJson();
+            }
+        });
     }
 
     private void exportGeoJson() {

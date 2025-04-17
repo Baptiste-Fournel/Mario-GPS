@@ -1,6 +1,6 @@
 package application.algorithms;
 
-import application.algorithms.DijkstraPathFinder.Coordinate;
+import domain.Coordinate;
 import application.interfaces.PathFindingUseCase;
 import domain.GameMap;
 
