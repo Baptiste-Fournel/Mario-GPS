@@ -51,7 +51,8 @@ Ce projet JavaFX illustre l’implémentation d’algorithmes de pathfinding (Di
 
 4. Lance AppOrchestrator.java
 
-💡 Utilisation
+## 💡 Utilisation
+
 Clique sur "Point de départ", puis sélectionne une case verte (herbe)
 
 Clique sur "Point d’arrivée", puis sélectionne une autre case
