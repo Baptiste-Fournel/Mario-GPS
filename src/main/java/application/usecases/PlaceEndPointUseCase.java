@@ -1,4 +1,4 @@
-package application;
+package application.usecases;
 
 import domain.GameMap;
 import domain.MapCell;

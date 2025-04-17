@@ -1,0 +1,21 @@
+.button {
+    -fx-font-size: 16px;
+    -fx-font-family: 'Arial';
+    -fx-background-color: #f2d7a0;
+    -fx-border-color: #000000;
+    -fx-border-width: 2px;
+    -fx-background-radius: 8px;
+    -fx-padding: 12px;
+}
+
+.button.active {
+    -fx-background-color: #ffd700;
+    -fx-border-color: #ff0000;
+}
+
+.combo-box.algo-select {
+    -fx-background-color: #d6eaf8;
+    -fx-font-size: 14px;
+    -fx-pref-width: 200px;
+    -fx-padding: 5px;
+}

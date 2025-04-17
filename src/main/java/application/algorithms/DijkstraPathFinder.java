@@ -1,15 +1,13 @@
-package application;
+package application.algorithms;
 
 import application.interfaces.PathFindingUseCase;
+import domain.Coordinate;
 import domain.GameMap;
 import domain.MapCell;
 
 import java.util.*;
 
-public class ShortestPathUseCase implements PathFindingUseCase {
-
-    public record Coordinate(int x, int y) {
-    }
+public class DijkstraPathFinder implements PathFindingUseCase {
 
     private static final List<Coordinate> DIRECTIONS = List.of(
             new Coordinate(0, -1),
@@ -38,10 +36,10 @@ public class ShortestPathUseCase implements PathFindingUseCase {
             }
 
             for (Coordinate direction : DIRECTIONS) {
-                Coordinate neighbor = new Coordinate(current.x + direction.x, current.y + direction.y);
+                Coordinate neighbor = new Coordinate(current.x() + direction.x(), current.y() + direction.y());
 
                 if (!isWithinBounds(neighbor, mapWidth, mapHeight)) continue;
-                if (!isWalkable(map.getCell(neighbor.x, neighbor.y))) continue;
+                if (!isWalkable(map.getCell(neighbor.x(), neighbor.y()))) continue;
 
                 int tentativeDistance = shortestDistances.get(current) + 1;
 
@@ -57,7 +55,7 @@ public class ShortestPathUseCase implements PathFindingUseCase {
     }
 
     private boolean isWithinBounds(Coordinate coord, int width, int height) {
-        return coord.x >= 0 && coord.x < width && coord.y >= 0 && coord.y < height;
+        return coord.x() >= 0 && coord.x() < width && coord.y() >= 0 && coord.y() < height;
     }
 
     private boolean isWalkable(MapCell cell) {
