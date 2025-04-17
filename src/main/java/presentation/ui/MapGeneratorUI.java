@@ -1,18 +1,15 @@
-package ui;
+package presentation.ui;
 
-import application.interfaces.PathFindingUseCase;
 import application.PlaceEndPointUseCase;
 import application.PlaceStartPointUseCase;
-import application.ShortestPathUseCase;
 import application.ShortestPathUseCase.Coordinate;
+import application.interfaces.PathFindingUseCase;
 import components.MapGenerator;
 import components.MapRenderer;
-import components.PathInterpreter;
 import domain.GameMap;
 import domain.MapCell;
 import domain.MapElementType;
 import infrastructure.GeoJsonExporter;
-import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -26,72 +23,72 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
+import lombok.Getter;
+import lombok.Setter;
 import org.json.JSONObject;
+import presentation.animation.MarioAnimator;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 
-public class MapGeneratorUI extends Application {
+public class MapGeneratorUI {
 
-    private static final int TILE_SIZE = 64;
-    private static final int WIDTH = 10;
-    private static final int HEIGHT = 10;
+    private final GameMap map;
+    private final Canvas canvas;
+    private final GraphicsContext graphics;
+    private final Map<MapElementType, Image> tileImages;
+    private final Image castleImage;
+    private final Image marioImage;
+    private final PlaceStartPointUseCase startUseCase;
+    private final PlaceEndPointUseCase endUseCase;
+    private final PathFindingUseCase pathUseCase;
+    private final MapRenderer renderer;
 
-    private final Map<MapElementType, Image> tileImages = new HashMap<>();
-    private final GameMap map = new GameMap(WIDTH, HEIGHT);
+    @Getter
+    private final HBox rootLayout;
 
-    private MapCell startNode = null;
-    private MapCell endNode = null;
+    @Setter
+    private MarioAnimator marioAnimator;
+    private int tileSize;
+
+    private MapCell startNode;
+    private MapCell endNode;
     private List<Coordinate> currentPath = new ArrayList<>();
 
-    private boolean selectingStart = false;
-    private boolean selectingEnd = false;
-
-    private Canvas canvas;
-    private GraphicsContext graphics;
-    private MapRenderer renderer;
+    private boolean selectingStart;
+    private boolean selectingEnd;
 
     private Button startButton;
     private Button endButton;
 
-    private final PlaceStartPointUseCase startUseCase = new PlaceStartPointUseCase();
-    private final PlaceEndPointUseCase endUseCase = new PlaceEndPointUseCase();
-    private final PathFindingUseCase pathUseCase = new ShortestPathUseCase();
+    public MapGeneratorUI(GameMap map, Canvas canvas, Map<MapElementType, Image> tileImages, Image marioImage, Image castleImage,
+                          PlaceStartPointUseCase startUseCase, PlaceEndPointUseCase endUseCase,
+                          PathFindingUseCase pathUseCase, MapRenderer renderer, MarioAnimator marioAnimator) {
 
-    @Override
-    public void start(Stage primaryStage) {
-        initializeCanvas();
-        loadTiles();
-        MapGenerator.generate(map);
-
-        renderer = new MapRenderer(map, graphics, tileImages);
-        renderer.render();
+        this.map = map;
+        this.canvas = canvas;
+        this.graphics = canvas.getGraphicsContext2D();
+        this.tileImages = tileImages;
+        this.marioImage = marioImage;
+        this.castleImage = castleImage;
+        this.startUseCase = startUseCase;
+        this.endUseCase = endUseCase;
+        this.pathUseCase = pathUseCase;
+        this.renderer = renderer;
+        this.marioAnimator = marioAnimator;
 
         VBox controlPanel = createControlPanel();
-        HBox rootLayout = buildMainLayout(controlPanel);
+        this.rootLayout = buildMainLayout(controlPanel);
 
-        primaryStage.setTitle("Carte générée aléatoirement");
-        primaryStage.setScene(new Scene(rootLayout));
-        primaryStage.show();
+        canvas.setOnMouseClicked(event -> handleCanvasClick((int) event.getX() / tileSize, (int) event.getY() / tileSize));
+    }
 
+    public void onSceneReady(Scene scene) {
+        scene.widthProperty().addListener((_, _, newVal) -> updateTileSizeAndRedraw(newVal.intValue(), (int) scene.getHeight()));
+        scene.heightProperty().addListener((_, _, newVal) -> updateTileSizeAndRedraw((int) scene.getWidth(), newVal.intValue()));
+        updateTileSizeAndRedraw((int) scene.getWidth(), (int) scene.getHeight());
         exportGeoJson();
-    }
-
-    private void initializeCanvas() {
-        canvas = new Canvas(WIDTH * TILE_SIZE, HEIGHT * TILE_SIZE);
-        graphics = canvas.getGraphicsContext2D();
-        canvas.setOnMouseClicked(event -> handleCanvasClick((int) (event.getX() / TILE_SIZE), (int) (event.getY() / TILE_SIZE)));
-    }
-
-    private void loadTiles() {
-        for (MapElementType type : MapElementType.values()) {
-            try {
-                String path = "/tiles/" + type.name().toLowerCase() + ".png";
-                tileImages.put(type, new Image(Objects.requireNonNull(getClass().getResource(path)).toExternalForm()));
-            } catch (Exception ignored) {}
-        }
     }
 
     private VBox createControlPanel() {
@@ -100,8 +97,8 @@ public class MapGeneratorUI extends Application {
         Button calculateButton = createStyledButton("Calculer le chemin");
         Button resetButton = createStyledButton("Réinitialiser");
 
-        startButton.setOnAction(e -> activateStartSelection());
-        endButton.setOnAction(e -> activateEndSelection());
+        startButton.setOnAction(e -> setSelectionMode(true, false));
+        endButton.setOnAction(e -> setSelectionMode(false, true));
         calculateButton.setOnAction(e -> calculatePath());
         resetButton.setOnAction(e -> resetMap());
 
@@ -120,15 +117,28 @@ public class MapGeneratorUI extends Application {
     private HBox buildMainLayout(VBox controls) {
         StackPane canvasContainer = new StackPane(canvas);
         canvasContainer.setPadding(new Insets(20));
-
         HBox layout = new HBox(30, canvasContainer, controls);
         layout.setPadding(new Insets(10));
         layout.setAlignment(Pos.CENTER);
         return layout;
     }
 
+    private void updateTileSizeAndRedraw(int windowWidth, int windowHeight) {
+        double canvasRatio = 0.8;
+        int availableWidth = (int) (windowWidth * canvasRatio);
+        int availableHeight = windowHeight - 40;
+        tileSize = Math.min(availableWidth / map.getWidth(), availableHeight / map.getHeight());
+
+        canvas.setWidth(tileSize * map.getWidth());
+        canvas.setHeight(tileSize * map.getHeight());
+
+        renderer.setTileSize(tileSize);
+        renderer.render();
+        drawSpecialImages(null);
+    }
+
     private void handleCanvasClick(int x, int y) {
-        if (x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT) return;
+        if (x < 0 || x >= map.getWidth() || y < 0 || y >= map.getHeight()) return;
 
         MapCell cell = map.getCell(x, y);
         if (cell.getType() != MapElementType.HERBE &&
@@ -143,12 +153,11 @@ public class MapGeneratorUI extends Application {
         } else if (selectingEnd && startNode != null) {
             endUseCase.execute(map, x, y, endNode);
             endNode = map.getCell(x, y);
-        } else {
-            return;
-        }
+        } else return;
 
         resetSelection();
         renderer.render();
+        drawSpecialImages(null);
         exportGeoJson();
     }
 
@@ -157,28 +166,36 @@ public class MapGeneratorUI extends Application {
 
         clearCurrentPath();
 
-        List<Coordinate> path = pathUseCase.execute(map,
-                new Coordinate(startNode.getX(), startNode.getY()),
-                new Coordinate(endNode.getX(), endNode.getY()));
+        Coordinate start = new Coordinate(startNode.getX(), startNode.getY());
+        Coordinate end = new Coordinate(endNode.getX(), endNode.getY());
 
-        if (path == null || path.isEmpty()) {
+        currentPath = pathUseCase.execute(map, start, end);
+        if (currentPath == null || currentPath.isEmpty()) {
             showErrorDialog();
             return;
         }
 
-        currentPath = path;
-        PathInterpreter.applyPath(currentPath, map);
+        marioAnimator.animate(currentPath, () -> {
+            renderer.render();
+            drawSpecialImages(null);
+        });
+    }
 
-        renderer.render();
-        exportGeoJson();
+    public void drawSpecialImages(Coordinate marioPosition) {
+        if (startNode != null)
+            graphics.drawImage(tileImages.get(MapElementType.START), startNode.getX() * tileSize, startNode.getY() * tileSize, tileSize, tileSize);
+
+        if (endNode != null)
+            graphics.drawImage(castleImage, endNode.getX() * tileSize, endNode.getY() * tileSize, tileSize, tileSize);
+
+        if (marioPosition != null)
+            graphics.drawImage(marioImage, marioPosition.x() * tileSize, marioPosition.y() * tileSize, tileSize, tileSize);
     }
 
     private void clearCurrentPath() {
         for (Coordinate coord : currentPath) {
             MapCell cell = map.getCell(coord.x(), coord.y());
-            if (cell.getType() == MapElementType.ARRETE_HORIZONTAL ||
-                    cell.getType() == MapElementType.ARRETE_VERTICAL ||
-                    cell.getType() == MapElementType.NOEUD) {
+            if (EnumSet.of(MapElementType.ARRETE_HORIZONTAL, MapElementType.ARRETE_VERTICAL, MapElementType.NOEUD).contains(cell.getType())) {
                 cell.setType(MapElementType.HERBE);
             }
         }
@@ -191,12 +208,13 @@ public class MapGeneratorUI extends Application {
         currentPath.clear();
         MapGenerator.generate(map);
         renderer.render();
+        drawSpecialImages(null);
         exportGeoJson();
     }
 
     private void exportGeoJson() {
-        JSONObject geoJson = GeoJsonExporter.export(map);
         try {
+            JSONObject geoJson = GeoJsonExporter.export(map);
             Files.write(Paths.get("generated-map.geojson"), geoJson.toString(2).getBytes());
         } catch (Exception ignored) {}
     }
@@ -206,15 +224,9 @@ public class MapGeneratorUI extends Application {
         alert.setTitle("Chemin introuvable");
         alert.setHeaderText(null);
         alert.setContentText("Aucun chemin n'est possible entre le point de départ et d’arrivée.");
-
         DialogPane dialogPane = alert.getDialogPane();
-        dialogPane.setStyle("""
-            -fx-font-size: 14px;
-            -fx-font-family: 'Segoe UI';
-            -fx-background-color: #ffe0e0;
-        """);
+        dialogPane.setStyle("-fx-font-size: 14px; -fx-font-family: 'Segoe UI'; -fx-background-color: #ffe0e0;");
         dialogPane.lookup(".content.label").setStyle("-fx-text-fill: #b00020;");
-
         alert.showAndWait();
     }
 
@@ -242,32 +254,15 @@ public class MapGeneratorUI extends Application {
         """;
     }
 
-    private void activateStartSelection() {
-        selectingStart = true;
-        selectingEnd = false;
-        startButton.setStyle(activeButtonStyle());
-        endButton.setStyle(defaultButtonStyle());
-        canvas.setCursor(Cursor.CROSSHAIR);
-    }
-
-    private void activateEndSelection() {
-        if (startNode == null) return;
-        selectingStart = false;
-        selectingEnd = true;
-        endButton.setStyle(activeButtonStyle());
-        startButton.setStyle(defaultButtonStyle());
-        canvas.setCursor(Cursor.CROSSHAIR);
+    private void setSelectionMode(boolean start, boolean end) {
+        selectingStart = start;
+        selectingEnd = end;
+        startButton.setStyle(start ? activeButtonStyle() : defaultButtonStyle());
+        endButton.setStyle(end ? activeButtonStyle() : defaultButtonStyle());
+        canvas.setCursor(start || end ? Cursor.CROSSHAIR : Cursor.DEFAULT);
     }
 
     private void resetSelection() {
-        selectingStart = false;
-        selectingEnd = false;
-        startButton.setStyle(defaultButtonStyle());
-        endButton.setStyle(defaultButtonStyle());
-        canvas.setCursor(Cursor.DEFAULT);
-    }
-
-    public static void main(String[] args) {
-        launch(args);
+        setSelectionMode(false, false);
     }
 }

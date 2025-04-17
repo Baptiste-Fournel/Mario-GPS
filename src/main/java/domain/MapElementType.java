@@ -9,4 +9,5 @@ public enum MapElementType {
     ARRETE_VERTICAL,
     CHATEAU,
     START,
+    MARIO,
 }

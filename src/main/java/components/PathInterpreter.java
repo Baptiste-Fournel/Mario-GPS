@@ -20,7 +20,7 @@ public class PathInterpreter {
         }
     }
 
-    private static MapElementType determineTileType(Coordinate prev, Coordinate curr, Coordinate next) {
+    public static MapElementType determineTileType(Coordinate prev, Coordinate curr, Coordinate next) {
         boolean horizontal = (curr.y() == prev.y() && curr.y() == next.y());
         boolean vertical = (curr.x() == prev.x() && curr.x() == next.x());
 

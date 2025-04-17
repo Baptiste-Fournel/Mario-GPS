@@ -1,7 +1,7 @@
 package application.interfaces;
 
-import domain.GameMap;
 import application.ShortestPathUseCase.Coordinate;
+import domain.GameMap;
 
 import java.util.List;
 
