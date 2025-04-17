@@ -8,7 +8,8 @@ import java.util.*;
 
 public class ShortestPathUseCase implements PathFindingUseCase {
 
-    public record Coordinate(int x, int y) {}
+    public record Coordinate(int x, int y) {
+    }
 
     private static final List<Coordinate> DIRECTIONS = List.of(
             new Coordinate(0, -1),

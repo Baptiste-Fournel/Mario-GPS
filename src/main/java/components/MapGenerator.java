@@ -9,7 +9,7 @@ import java.util.Random;
 
 public class MapGenerator {
     private static final List<MapElementType> weights = List.of(
-            MapElementType.HERBE, MapElementType.HERBE, MapElementType.HERBE, MapElementType.HERBE, MapElementType.HERBE,
+            MapElementType.HERBE, MapElementType.HERBE, MapElementType.HERBE, MapElementType.HERBE, MapElementType.HERBE, MapElementType.HERBE,
             MapElementType.ARBRE,
             MapElementType.EAU
     );
