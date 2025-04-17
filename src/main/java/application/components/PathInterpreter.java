@@ -1,4 +1,4 @@
-package components;
+package application.components;
 
 import application.algorithms.DijkstraPathFinder.Coordinate;
 import domain.MapElementType;

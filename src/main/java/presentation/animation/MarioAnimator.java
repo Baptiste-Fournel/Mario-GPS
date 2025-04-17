@@ -1,8 +1,8 @@
 package presentation.animation;
 
 import application.algorithms.DijkstraPathFinder.Coordinate;
-import components.MapRenderer;
-import components.PathInterpreter;
+import application.components.MapRenderer;
+import application.components.PathInterpreter;
 import domain.GameMap;
 import domain.MapElementType;
 import javafx.animation.KeyFrame;

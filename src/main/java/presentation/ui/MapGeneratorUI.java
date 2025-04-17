@@ -1,9 +1,9 @@
 package presentation.ui;
 
-import application.PlaceEndPointUseCase;
-import application.PlaceStartPointUseCase;
 import application.algorithms.DijkstraPathFinder.Coordinate;
-import components.MapRenderer;
+import application.usecases.PlaceEndPointUseCase;
+import application.usecases.PlaceStartPointUseCase;
+import application.components.MapRenderer;
 import domain.GameMap;
 import domain.MapCell;
 import domain.MapElementType;
@@ -20,7 +20,10 @@ import presentation.animation.MarioAnimator;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
 public class MapGeneratorUI {
 
@@ -31,14 +34,17 @@ public class MapGeneratorUI {
     private final Image marioImage;
     private final Image castleImage;
 
-    @Getter private final MapRenderer renderer;
+    @Getter
+    private final MapRenderer renderer;
     private final MapInteractionHandler interactionHandler;
     private final PathCalculationController pathController;
     private final MapUIBuilder builder;
 
-    @Getter private final HBox rootLayout;
+    @Getter
+    private final HBox rootLayout;
 
-    @Getter @Setter
+    @Getter
+    @Setter
     private MarioAnimator marioAnimator;
 
     private int tileSize;
@@ -101,21 +107,15 @@ public class MapGeneratorUI {
         MapCell endNode = interactionHandler.getEndNode();
 
         if (startNode != null) {
-            graphics.drawImage(tileImages.get(MapElementType.START),
-                    startNode.getX() * tileSize, startNode.getY() * tileSize,
-                    tileSize, tileSize);
+            graphics.drawImage(tileImages.get(MapElementType.START), startNode.getX() * tileSize, startNode.getY() * tileSize, tileSize, tileSize);
         }
 
         if (endNode != null) {
-            graphics.drawImage(castleImage,
-                    endNode.getX() * tileSize, endNode.getY() * tileSize,
-                    tileSize, tileSize);
+            graphics.drawImage(castleImage, endNode.getX() * tileSize, endNode.getY() * tileSize, tileSize, tileSize);
         }
 
         if (marioPosition != null) {
-            graphics.drawImage(marioImage,
-                    marioPosition.x() * tileSize, marioPosition.y() * tileSize,
-                    tileSize, tileSize);
+            graphics.drawImage(marioImage, marioPosition.x() * tileSize, marioPosition.y() * tileSize, tileSize, tileSize);
         }
     }
 

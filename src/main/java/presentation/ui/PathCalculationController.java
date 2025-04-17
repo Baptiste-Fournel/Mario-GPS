@@ -3,15 +3,18 @@ package presentation.ui;
 import application.algorithms.AStarPathFinder;
 import application.algorithms.DijkstraPathFinder;
 import application.algorithms.DijkstraPathFinder.Coordinate;
+import application.components.MapRenderer;
 import application.enums.PathAlgorithm;
 import application.interfaces.PathFindingUseCase;
-import components.MapRenderer;
 import domain.GameMap;
 import javafx.scene.control.Label;
 import lombok.Getter;
 import presentation.animation.MarioAnimator;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class PathCalculationController {
 

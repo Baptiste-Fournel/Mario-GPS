@@ -1,8 +1,8 @@
 package presentation.ui;
 
-import application.PlaceEndPointUseCase;
-import application.PlaceStartPointUseCase;
 import application.algorithms.DijkstraPathFinder.Coordinate;
+import application.usecases.PlaceEndPointUseCase;
+import application.usecases.PlaceStartPointUseCase;
 import domain.GameMap;
 import domain.MapCell;
 import domain.MapElementType;

@@ -1,4 +1,4 @@
-package components;
+package application.components;
 
 import domain.GameMap;
 import domain.MapElementType;

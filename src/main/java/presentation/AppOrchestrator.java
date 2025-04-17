@@ -1,9 +1,9 @@
 package presentation;
 
-import application.PlaceEndPointUseCase;
-import application.PlaceStartPointUseCase;
-import components.MapGenerator;
-import components.MapRenderer;
+import application.components.MapGenerator;
+import application.components.MapRenderer;
+import application.usecases.PlaceEndPointUseCase;
+import application.usecases.PlaceStartPointUseCase;
 import domain.GameMap;
 import domain.MapElementType;
 import javafx.application.Application;
