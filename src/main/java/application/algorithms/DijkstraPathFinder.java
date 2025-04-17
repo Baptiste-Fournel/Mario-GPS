@@ -1,4 +1,4 @@
-package application;
+package application.algorithms;
 
 import application.interfaces.PathFindingUseCase;
 import domain.GameMap;
@@ -6,7 +6,7 @@ import domain.MapCell;
 
 import java.util.*;
 
-public class ShortestPathUseCase implements PathFindingUseCase {
+public class DijkstraPathFinder implements PathFindingUseCase {
 
     public record Coordinate(int x, int y) {
     }

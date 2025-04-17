@@ -1,6 +1,6 @@
 package application.interfaces;
 
-import application.ShortestPathUseCase.Coordinate;
+import application.algorithms.DijkstraPathFinder.Coordinate;
 import domain.GameMap;
 
 import java.util.List;

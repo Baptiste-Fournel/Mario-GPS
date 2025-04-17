@@ -2,8 +2,6 @@ package presentation;
 
 import application.PlaceEndPointUseCase;
 import application.PlaceStartPointUseCase;
-import application.ShortestPathUseCase;
-import application.interfaces.PathFindingUseCase;
 import components.MapGenerator;
 import components.MapRenderer;
 import domain.GameMap;
@@ -39,7 +37,8 @@ public class AppOrchestrator extends Application {
             try {
                 String path = "/tiles/" + type.name().toLowerCase() + ".png";
                 tileImages.put(type, new Image(Objects.requireNonNull(getClass().getResource(path)).toExternalForm()));
-            } catch (Exception ignored) {}
+            } catch (Exception ignored) {
+            }
         }
 
         Image marioImage = new Image(Objects.requireNonNull(getClass().getResource("/tiles/mario.png")).toExternalForm());
@@ -47,18 +46,19 @@ public class AppOrchestrator extends Application {
 
         PlaceStartPointUseCase startUseCase = new PlaceStartPointUseCase();
         PlaceEndPointUseCase endUseCase = new PlaceEndPointUseCase();
-        PathFindingUseCase pathUseCase = new ShortestPathUseCase();
 
-        MapRenderer renderer = new MapRenderer(map, graphics, tileImages, 1); // valeur temporaire
+        MapRenderer renderer = new MapRenderer(map, graphics, tileImages, 1);
         MapGeneratorUI ui = new MapGeneratorUI(
                 map, canvas, tileImages, marioImage, castleImage,
-                startUseCase, endUseCase, pathUseCase, renderer, null
+                startUseCase, endUseCase, renderer, null
         );
+
 
         MarioAnimator animator = new MarioAnimator(graphics, renderer, map, marioImage, ui::drawSpecialImages);
         ui.setMarioAnimator(animator);
 
         Scene scene = new Scene(ui.getRootLayout());
+        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/css/style.css")).toExternalForm());
 
         primaryStage.setTitle("Mario GPS");
         primaryStage.setScene(scene);
