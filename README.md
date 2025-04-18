@@ -49,7 +49,7 @@ Ce projet JavaFX illustre l’implémentation d’algorithmes de pathfinding (Di
 
 3. Configure JavaFX dans les paramètres du projet
 
-4. Lance AppOrchestrator.java
+4. Lance Main.java
 
 ## 💡 Utilisation
 
