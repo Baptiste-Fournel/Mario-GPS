@@ -43,7 +43,7 @@ Ce projet JavaFX illustre l’implémentation d’algorithmes de pathfinding (Di
 
 1. Clone ce repo :
    ```bash
-   git clone https://github.com/ton-repo/mario-gps.git
+   git clone https://github.com/Baptiste-Fournel/Mario-GPS.git
    cd mario-gps
 2. Ouvre le projet avec IntelliJ
 
